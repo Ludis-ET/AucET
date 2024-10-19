@@ -1,3 +1,5 @@
+import { FaGoogle } from "react-icons/fa";
+
 export const Login = () => {
   return (
     <div className="bg-mainBackground flex justify-center items-center h-screen">
@@ -14,9 +16,10 @@ export const Login = () => {
           bidding experiences await!
         </h1>
         <button
-          className="bg-buttonBackground hover:bg-buttonHover text-mainBackground font-semibold rounded-md py-2 px-4 text-2xl"
+          className="bg-buttonBackground flex items-center justify-center hover:bg-buttonHover text-mainBackground font-semibold rounded-md py-2 px-4 text-2xl"
         >
           Continue with
+          <FaGoogle className="inline-block ml-2" />oogle
         </button>
       </div>
     </div>
