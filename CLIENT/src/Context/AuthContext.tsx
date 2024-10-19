@@ -13,6 +13,7 @@ import { auth, db } from "../firebase";
 interface AuthContextType {
   currentUser: User | null;
   setCurrentUser: (user: User | null) => void;
+  profile?: Profile;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -43,7 +44,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     return unsubscribe;
   }, []);
-  
+
   useEffect(() => {
     if (!currentUser) return;
     const checkAndCreateUserById = async () => {
