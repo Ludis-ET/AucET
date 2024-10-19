@@ -1,20 +1,29 @@
-import  { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 
 const Auth = lazy(() => import("./Authentication/Auth"));
-const AboutPage = lazy(() => import("./components/AboutPage"));
-const ContactPage = lazy(() => import("./components/ContactPage"));
+const Home = lazy(() => import("./Home/Home"));
+const Payment = lazy(() => import("./Payment/Payment"));
+const Room = lazy(() => import("./Room/Room"));
 
 const App = () => {
+  const [subdomain, setSubdomain] = useState("");
+
+  useEffect(() => {
+    const hostParts = window.location.hostname.split(".");
+    if (hostParts.length > 1) {
+      setSubdomain(hostParts[0]);
+    }
+  }, []);
+
   return (
-    // <Suspense fallback={<Loading />}>
-    <Suspense >
+    <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        <Route path="/" element={<Auth />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="*" element={<Navigate to="/" />} />{" "}
-        {/* Redirect to Home for any unknown routes */}
+        {subdomain === "room" && <Route path="/" element={<Room />} />}
+        {subdomain === "payment" && <Route path="/" element={<Payment />} />}
+        {subdomain === "" && <Route path="/" element={<Auth />} />}
+        <Route path="/home" element={<Home />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Suspense>
   );
