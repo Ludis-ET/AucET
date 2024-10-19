@@ -1,6 +1,17 @@
 import { FaGoogle } from "react-icons/fa";
+import { signUpWithGoogle } from "../firebase/auth"; 
+import { useAuth } from "../../Context";
 
 export const Login = () => {
+  const { setCurrentUser } = useAuth();
+
+  const handleLogin = async () => {
+    try {
+      await signUpWithGoogle(setCurrentUser);
+    } catch (error) {
+      console.error("Google sign-in failed:", error);
+    }
+  };
 
   return (
     <div className="bg-mainBackground flex justify-center items-center h-screen">
@@ -17,12 +28,12 @@ export const Login = () => {
           bidding experiences await!
         </h1>
         <button
-        //   onClick={handleLogin}
+          onClick={handleLogin}
           className="bg-buttonBackground flex items-center justify-center hover:bg-buttonHover text-mainBackground font-semibold rounded-md py-2 px-4 text-2xl"
         >
           Continue with
           <FaGoogle className="inline-block ml-2" />
-          Google
+          oogle
         </button>
       </div>
     </div>
