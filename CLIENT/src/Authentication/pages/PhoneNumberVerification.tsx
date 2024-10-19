@@ -1,29 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import axios from "axios"; 
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import { RecaptchaVerifier } from "firebase/auth";
 import { auth } from "../../firebase";
 
 export const PhoneNumberVerification = () => {
-  const [phoneNumber, setPhoneNumberLocal] = useState("");
   const [otp, setOtp] = useState("");
-  const [isOtpSent, setIsOtpSent] = useState(false); 
-  const backend = import.meta.env.VITE_BACKEND_URL;
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const { handleSubmit } = useForm();
+  const [recaptchaVerifier, setRecaptchaVerifier] = useState<RecaptchaVerifier | null>(null);
+
+  useEffect(() => {
+    const verifier = new RecaptchaVerifier(auth, "recaptcha", {
+      size: "invisible",
+      callback: (response: string) => {
+        console.log("Captcha resolved", response);
+      },
+      "expired-callback": () => {
+        console.log("Captcha expired");
+      },
+    });
+    setRecaptchaVerifier(verifier);
+  }, []);
 
   const handleSendOTP = async () => {
     try {
-      const recaptcha = new RecaptchaVerifier(auth, "recaptcha", {});
-      const confirmation = await signInWithPhoneNumber(
-        auth,
-        phoneNumber,
-        recaptcha
-      );
-
-      
-      await axios.post(`${backend}/send-otp`, { phoneNumber });
-
+      if (!recaptchaVerifier) {
+        throw new Error("Recaptcha verifier is not initialized");
+      }
+      const token = await recaptchaVerifier.verify();
+      await axios.post("http://localhost:3000/send-otp", { phoneNumber });
       toast.success("OTP sent successfully!");
-      console.log(confirmation);
       setIsOtpSent(true);
     } catch (error) {
       toast.error((error as Error).message);
@@ -33,56 +44,57 @@ export const PhoneNumberVerification = () => {
 
   const handleVerifyOTP = async () => {
     try {
-      const response = await axios.post(`${backend}/verify-otp`, {
+      const response = await axios.post("http://localhost:3000/verify-otp", {
         phoneNumber,
         otp,
       });
-
       if (response.status === 200) {
         toast.success("OTP verified successfully!");
       }
     } catch (error) {
       toast.error("Invalid OTP or verification failed.");
-      console.error(error);
+      console.error("OTP verification failed:", error);
     }
   };
 
   return (
-    <div className="bg-mainBackground flex justify-center items-center h-screen">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Verify Your Phone Number</h2>
-        <input
-          type="tel"
-          placeholder="Enter phone number (+251...)"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumberLocal(e.target.value)}
-          className="p-2 border rounded-md w-full mb-4"
-        />
-        <div id="recaptcha"></div>
-        <button
-          onClick={handleSendOTP}
-          className="bg-buttonBackground text-white py-2 px-4 rounded-md hover:bg-buttonHover"
-        >
-          Send OTP
-        </button>
+    <div className="bg-gradient-to-r from-blue-500 to-teal-500 flex justify-center items-center h-screen">
+      <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-3xl font-bold mb-6 text-center">
+          Verify Your Phone Number
+        </h2>
+        <form onSubmit={handleSubmit(handleSendOTP)} className="space-y-4">
+          <PhoneInput
+            country="ET"
+            value={phoneNumber}
+            onChange={setPhoneNumber}
+            placeholder="Enter phone number"
+          />
+          <div id="recaptcha"></div>
+          <button
+            type="submit"
+            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-300 w-full"
+          >
+            Send OTP
+          </button>
+        </form>
         {isOtpSent && (
-          <div className="mt-4">
+          <div className="mt-6">
             <input
               type="text"
               placeholder="Enter OTP"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
-              className="p-2 border rounded-md w-full mb-4"
+              className="p-3 border rounded-md w-full border-gray-300"
             />
             <button
               onClick={handleVerifyOTP}
-              className="bg-buttonBackground text-white py-2 px-4 rounded-md hover:bg-buttonHover"
+              className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors duration-300 w-full mt-4"
             >
               Verify OTP
             </button>
           </div>
         )}
-        <div id="recaptcha-container"></div> {/* Invisible recaptcha */}
       </div>
     </div>
   );
