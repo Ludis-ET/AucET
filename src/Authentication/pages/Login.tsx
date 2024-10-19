@@ -14,10 +14,9 @@ export const Login = () => {
           bidding experiences await!
         </h1>
         <button
-          type="submit"
           className="bg-buttonBackground hover:bg-buttonHover text-mainBackground font-semibold rounded-md py-2 px-4 text-2xl"
         >
-          Login
+          Continue with
         </button>
       </div>
     </div>
