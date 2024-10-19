@@ -21,8 +21,8 @@ const App = () => {
       <Routes>
         {subdomain === "room" && <Route path="/" element={<Room />} />}
         {subdomain === "payment" && <Route path="/" element={<Payment />} />}
-        {subdomain === "" && <Route path="/" element={<Auth />} />}
-        <Route path="/home" element={<Home />} />
+        {subdomain === "auth" && <Route path="/" element={<Auth />} />}
+        {subdomain === "" && <Route path="/" element={<Home />} />}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Suspense>
