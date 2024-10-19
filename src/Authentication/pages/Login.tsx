@@ -1,15 +1,22 @@
+import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
-import { signUpWithGoogle } from "../firebase/auth"; 
+
+import { signUpWithGoogle } from "../firebase/auth";
 import { useAuth } from "../../Context";
+import { LuLoader } from "react-icons/lu";
 
 export const Login = () => {
   const { setCurrentUser } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     try {
+      setLoading(true);
       await signUpWithGoogle(setCurrentUser);
+      setLoading(false);
     } catch (error) {
       console.error("Google sign-in failed:", error);
+      setLoading(false);
     }
   };
 
@@ -31,9 +38,15 @@ export const Login = () => {
           onClick={handleLogin}
           className="bg-buttonBackground flex items-center justify-center hover:bg-buttonHover text-mainBackground font-semibold rounded-md py-2 px-4 text-2xl"
         >
-          Continue with
-          <FaGoogle className="inline-block ml-2" />
-          oogle
+          {!loading ? (
+            <>
+              Continue with
+              <FaGoogle className="inline-block ml-2" />
+              oogle
+            </>
+          ) : (
+            <LuLoader />
+          )}
         </button>
       </div>
     </div>
