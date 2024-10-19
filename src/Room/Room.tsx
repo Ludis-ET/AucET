@@ -1,5 +1,5 @@
-export const Room = () => {
-  return (
-    <div>Room</div>
-  )
-}
+const Room = () => {
+  return <div>Room</div>;
+};
+
+export default Room;
