@@ -1,13 +1,9 @@
-import { signInWithRedirect, getAuth, GoogleAuthProvider } from "firebase/auth";
-import { handleAuthRedirect } from "../firebase/auth";
+import { signInWithGoogle } from "../../firebase";
 import { FaGoogle } from "react-icons/fa";
 
 export const Login = () => {
   const handleLogin = async () => {
-    const provider = new GoogleAuthProvider();
-    const auth = getAuth();
-    await signInWithRedirect(auth, provider);
-    await handleAuthRedirect(); 
+    await signInWithGoogle();
   };
 
   return (
@@ -30,7 +26,7 @@ export const Login = () => {
         >
           Continue with
           <FaGoogle className="inline-block ml-2" />
-          oogle
+          Google
         </button>
       </div>
     </div>

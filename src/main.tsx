@@ -6,12 +6,15 @@ import { Toaster } from "react-hot-toast";
 
 import App from "./App.tsx";
 import "./index.css";
+import { AuthProvider } from "./Context";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Router>
-      <Toaster />
-      <App />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Toaster />
+        <App />
+      </Router>
+    </AuthProvider>
   </StrictMode>
 );
