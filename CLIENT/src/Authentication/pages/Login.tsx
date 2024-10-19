@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 
-import { signUpWithGoogle } from "../firebase/auth";
+import { signUpWithGoogle } from "../firebase/GoogleAuth";
 import { useAuth } from "../../Context";
 import { LuLoader } from "react-icons/lu";
 
