@@ -1,36 +1,33 @@
 import { createContext, useEffect, useState, ReactNode } from "react";
-import { auth, handleAuthRedirect } from "../firebase";
 import { User } from "firebase/auth";
+import { auth } from "../firebase";
 
 interface AuthContextType {
-  user: User | null;
+  currentUser: User | null;
+  setCurrentUser: (user: User | null) => void;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const authenticatedUser = await handleAuthRedirect();
-      setUser(authenticatedUser);
-    };
-
-    fetchUser();
-    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setCurrentUser(user);
     });
 
-    return () => unsubscribe();
+    return unsubscribe;
   }, []);
-
-  return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
-  );
+  const value = {
+    currentUser,
+    setCurrentUser,
+  };
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
-

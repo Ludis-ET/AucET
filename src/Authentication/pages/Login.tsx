@@ -1,10 +1,6 @@
-import { signInWithGoogle } from "../../firebase";
 import { FaGoogle } from "react-icons/fa";
 
 export const Login = () => {
-  const handleLogin = async () => {
-    await signInWithGoogle();
-  };
 
   return (
     <div className="bg-mainBackground flex justify-center items-center h-screen">
@@ -21,7 +17,7 @@ export const Login = () => {
           bidding experiences await!
         </h1>
         <button
-          onClick={handleLogin}
+        //   onClick={handleLogin}
           className="bg-buttonBackground flex items-center justify-center hover:bg-buttonHover text-mainBackground font-semibold rounded-md py-2 px-4 text-2xl"
         >
           Continue with
