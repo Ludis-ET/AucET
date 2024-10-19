@@ -1,10 +1,14 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
+import axios from "axios"; 
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase";
 
 export const PhoneNumberVerification = () => {
   const [phoneNumber, setPhoneNumberLocal] = useState("");
+  const [otp, setOtp] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false); 
+  const backend = import.meta.env.VITE_BACKEND_URL;
 
   const handleSendOTP = async () => {
     try {
@@ -14,11 +18,32 @@ export const PhoneNumberVerification = () => {
         phoneNumber,
         recaptcha
       );
+
+      
+      await axios.post(`${backend}/send-otp`, { phoneNumber });
+
       toast.success("OTP sent successfully!");
       console.log(confirmation);
+      setIsOtpSent(true);
     } catch (error) {
       toast.error((error as Error).message);
       throw error;
+    }
+  };
+
+  const handleVerifyOTP = async () => {
+    try {
+      const response = await axios.post(`${backend}/verify-otp`, {
+        phoneNumber,
+        otp,
+      });
+
+      if (response.status === 200) {
+        toast.success("OTP verified successfully!");
+      }
+    } catch (error) {
+      toast.error("Invalid OTP or verification failed.");
+      console.error(error);
     }
   };
 
@@ -40,6 +65,23 @@ export const PhoneNumberVerification = () => {
         >
           Send OTP
         </button>
+        {isOtpSent && (
+          <div className="mt-4">
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              className="p-2 border rounded-md w-full mb-4"
+            />
+            <button
+              onClick={handleVerifyOTP}
+              className="bg-buttonBackground text-white py-2 px-4 rounded-md hover:bg-buttonHover"
+            >
+              Verify OTP
+            </button>
+          </div>
+        )}
         <div id="recaptcha-container"></div> {/* Invisible recaptcha */}
       </div>
     </div>
