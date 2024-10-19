@@ -1,7 +1,7 @@
+import { Login } from "./pages";
+
 const Auth = () => {
-  return (
-    <div>Auth</div>
-  )
-}
+  return <Login />;
+};
 
 export default Auth;
