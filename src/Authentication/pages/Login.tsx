@@ -1,6 +1,15 @@
+import { signInWithRedirect, getAuth, GoogleAuthProvider } from "firebase/auth";
+import { handleAuthRedirect } from "../firebase/auth";
 import { FaGoogle } from "react-icons/fa";
 
 export const Login = () => {
+  const handleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth();
+    await signInWithRedirect(auth, provider);
+    await handleAuthRedirect(); 
+  };
+
   return (
     <div className="bg-mainBackground flex justify-center items-center h-screen">
       <div className="w-1/2 h-screen hidden lg:block">
@@ -10,16 +19,18 @@ export const Login = () => {
           className="object-cover w-full h-full"
         />
       </div>
-      <div className="lg:p-36 md:p-52 sm:p-20 p-8 w-full flex flex-col gap-8  lg:w-1/2">
+      <div className="lg:p-36 md:p-52 sm:p-20 p-8 w-full flex flex-col gap-8 lg:w-1/2">
         <h1 className="text-4xl text-center font-semibold mb-4 text-mainText">
           Welcome to AucEt, your premier online auction platform where exciting
           bidding experiences await!
         </h1>
         <button
+          onClick={handleLogin}
           className="bg-buttonBackground flex items-center justify-center hover:bg-buttonHover text-mainBackground font-semibold rounded-md py-2 px-4 text-2xl"
         >
           Continue with
-          <FaGoogle className="inline-block ml-2" />oogle
+          <FaGoogle className="inline-block ml-2" />
+          oogle
         </button>
       </div>
     </div>
