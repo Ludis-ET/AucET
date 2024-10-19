@@ -1,38 +1,30 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
+
 import "react-phone-input-2/lib/style.css";
-import { RecaptchaVerifier } from "firebase/auth";
-import { auth } from "../../firebase";
+import { useAuth } from "../../Context";
 
 export const PhoneNumberVerification = () => {
+  const { profile, setProfile } = useAuth();
   const [otp, setOtp] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false);
   const { handleSubmit } = useForm();
-  const [recaptchaVerifier, setRecaptchaVerifier] = useState<RecaptchaVerifier | null>(null);
 
-  useEffect(() => {
-    const verifier = new RecaptchaVerifier(auth, "recaptcha", {
-      size: "invisible",
-      callback: (response: string) => {
-        console.log("Captcha resolved", response);
-      },
-      "expired-callback": () => {
-        console.log("Captcha expired");
-      },
-    });
-    setRecaptchaVerifier(verifier);
-  }, []);
+  const isValidEthiopianPhoneNumber = (number: string) => {
+    return number.length === 12 && number.startsWith("2519");
+  };
 
   const handleSendOTP = async () => {
     try {
-      if (!recaptchaVerifier) {
-        throw new Error("Recaptcha verifier is not initialized");
+      if (!isValidEthiopianPhoneNumber(phoneNumber.toString())) {
+        toast.error("Please enter a valid Ethiopian phone number.");
+        return;
       }
-      const token = await recaptchaVerifier.verify();
+
       await axios.post("http://localhost:3000/send-otp", { phoneNumber });
       toast.success("OTP sent successfully!");
       setIsOtpSent(true);
@@ -50,6 +42,18 @@ export const PhoneNumberVerification = () => {
       });
       if (response.status === 200) {
         toast.success("OTP verified successfully!");
+
+        if (profile) {
+          const updatedProfile = {
+            ...profile,
+            phoneNumber,
+            phoneVerified: true,
+          };
+
+          if (setProfile) {
+            setProfile(updatedProfile);
+          }
+        }
       }
     } catch (error) {
       toast.error("Invalid OTP or verification failed.");
@@ -58,22 +62,22 @@ export const PhoneNumberVerification = () => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-blue-500 to-teal-500 flex justify-center items-center h-screen">
+    <div className="bg-gradient-to-r from-mainBackground to-secondaryBackground flex justify-center items-center h-screen">
       <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-6 text-center">
+        <h2 className="text-3xl font-bold mb-6 text-center text-mainText">
           Verify Your Phone Number
         </h2>
         <form onSubmit={handleSubmit(handleSendOTP)} className="space-y-4">
           <PhoneInput
-            country="ET"
+            country={"et"}
             value={phoneNumber}
             onChange={setPhoneNumber}
             placeholder="Enter phone number"
+            disableDropdown={true}
           />
-          <div id="recaptcha"></div>
           <button
             type="submit"
-            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-300 w-full"
+            className="bg-buttonBackground text-white py-2 px-4 rounded-md hover:bg-buttonHover transition-colors duration-300 w-full"
           >
             Send OTP
           </button>
@@ -98,4 +102,5 @@ export const PhoneNumberVerification = () => {
       </div>
     </div>
   );
+
 };

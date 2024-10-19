@@ -14,6 +14,7 @@ interface AuthContextType {
   currentUser: User | null;
   setCurrentUser: (user: User | null) => void;
   profile?: Profile;
+  setProfile?: (profile: Profile) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -82,6 +83,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     currentUser,
     setCurrentUser,
     profile,
+    setProfile,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
