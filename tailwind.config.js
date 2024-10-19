@@ -3,23 +3,23 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Light beige color for background
-        beige: "#F5F5DC",
+        // Main background
+        mainBackground: "#F5F5DC", // Light beige color
 
-        // Cream color for secondary backgrounds or accents
-        cream: "#FFFDD0",
+        // Secondary background
+        secondaryBackground: "#FFFDD0", // Cream color
 
-        // Sandy brown color for buttons or highlights
-        sandyBrown: "#F4A460",
+        // Button background
+        buttonHover: "#F4A460", // Sandy brown color
 
-        // Chocolate brown for text or headers
-        chocolateBrown: "#D2691E",
+        buttonBackground: "#8B4513", // Saddle brown color
+        // Main text color
+        mainText: "#D2691E", // Chocolate brown
 
-        // Cocoa brown for dark accents or borders
-        cocoaBrown: "#4E3B31",
+        // Other text color
+        otherText: "#4E3B31", // Cocoa brown
 
-        // White for text or background contrast
-        white: "#FFFFFF",
+        // Additional colors can be added here if needed
       },
     },
   },
