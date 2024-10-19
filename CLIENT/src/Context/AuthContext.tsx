@@ -7,7 +7,7 @@ import {
   getDocs,
   setDoc,
   doc,
-} from "firebase/firestore"; 
+} from "firebase/firestore";
 import { auth, db } from "../firebase";
 
 interface AuthContextType {
@@ -23,8 +23,18 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+interface Profile {
+  userId: string;
+  email: string;
+  displayName: string;
+  photoURL: string;
+  phoneNumber: string;
+  phoneVerified: boolean;
+}
+
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile>();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -33,12 +43,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     return unsubscribe;
   }, []);
-
+  
   useEffect(() => {
     if (!currentUser) return;
-    const checkAndCreateUserById = async (userId: string, userData) => {
-      const usersRef = collection(db, "users");
-      const q = query(usersRef, where("userId", "==", userId));
+    const checkAndCreateUserById = async () => {
+      const usersRef = collection(db, "User-Profiles");
+      const q = query(usersRef, where("userId", "==", currentUser.uid));
 
       try {
         const querySnapshot = await getDocs(q);
@@ -48,21 +58,29 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           return existingUser;
         } else {
           const newUserRef = doc(usersRef);
-          await setDoc(newUserRef, { userId, ...userData });
-          return { userId, ...userData };
+          const newUser = {
+            userId: currentUser.uid,
+            email: currentUser.email || "",
+            displayName: currentUser.displayName || "",
+            photoURL: currentUser.photoURL || "",
+            phoneNumber: "",
+            phoneVerified: false,
+          };
+          await setDoc(newUserRef, newUser);
+          setProfile(newUser);
         }
       } catch (error) {
         console.error("Error checking/creating user:", error);
         throw error;
       }
     };
-
+    checkAndCreateUserById();
   }, [currentUser]);
-
 
   const value = {
     currentUser,
     setCurrentUser,
+    profile,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
