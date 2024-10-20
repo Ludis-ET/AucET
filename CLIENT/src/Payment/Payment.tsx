@@ -1,6 +1,8 @@
+import { Dashboard } from "./pages"
+
 const Payment = () => {
   return (
-    <div>Payment</div>
+    <Dashboard />
   )
 }
 
