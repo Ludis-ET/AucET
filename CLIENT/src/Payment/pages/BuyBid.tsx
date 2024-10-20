@@ -3,10 +3,15 @@ import { handleSubmit } from "../chapa";
 import { useAuth } from "../../Context";
 import { Bids } from ".";
 
+const generateTxRef = () => {
+  const randomHash = Math.random().toString(36).substring(2, 15);
+  const timestamp = Date.now();
+  return `aucet-tx-${randomHash}-${timestamp}`;
+};
+
 export const BuyBid = () => {
   const frontend = import.meta.env.VITE_FRONTEND_URL;
   const publicKey = import.meta.env.VITE_CHAPA_AUTH;
-  const txRef = `aucet-tx-${Date.now()}`;
   const bidAmount = Number(import.meta.env.VITE_BID_AMOUNT) || 100;
   const transactionFeePercentage =
     Number(import.meta.env.VITE_TRANSACTION_FEE) || 0;
@@ -15,6 +20,8 @@ export const BuyBid = () => {
   const [numberOfBids, setNumberOfBids] = useState(1);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [txRef, setTxRef] = useState("");
+  const [redirectUrl, setRedirectUrl] = useState("");
 
   const totalAmount = amountETB || numberOfBids * bidAmount;
   const transactionFee = (totalAmount * transactionFeePercentage) / 100;
@@ -36,12 +43,19 @@ export const BuyBid = () => {
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
+
+    const newTxRef = generateTxRef();
+    const newRedirectUrl = `${frontend}/payments/success/${newTxRef}`;
+
+    setTxRef(newTxRef);
+    setRedirectUrl(newRedirectUrl);
+
     await handleSubmit(
       event,
       numberOfBids,
       bidAmount,
       transactionFeePercentage,
-      txRef,
+      newTxRef,
       setError,
       profile
     );
@@ -51,9 +65,7 @@ export const BuyBid = () => {
   return (
     <div className="bg-secondaryBackground p-8 rounded-lg max-w-[90vw] w-96 shadow-lg">
       <header className="flex justify-between items-center gap-20 border-b-2 pb-4">
-        <p className="text-mainText font-extrabold text-2xl">
-          Buy Bids
-        </p>
+        <p className="text-mainText font-extrabold text-2xl">Buy Bids</p>
         <Bids />
       </header>
       <main className="mt-4">
@@ -131,16 +143,8 @@ export const BuyBid = () => {
             name="logo"
             value="https://chapa.link/asset/images/chapa_swirl.svg"
           />
-          <input
-            type="hidden"
-            name="callback_url"
-            value={`${frontend}/payments/success/${txRef}`}
-          />
-          <input
-            type="hidden"
-            name="return_url"
-            value={`${frontend}/payments/success/${txRef}`}
-          />
+          <input type="hidden" name="callback_url" value={redirectUrl} />
+          <input type="hidden" name="return_url" value={redirectUrl} />
           <input type="hidden" name="meta[title]" value="test" />
           <button
             type="submit"
