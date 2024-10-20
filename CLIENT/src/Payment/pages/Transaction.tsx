@@ -1,13 +1,13 @@
 import { Timestamp } from "firebase/firestore";
-import { BuyBid, SpendBid, usePayment } from "../../Context";
+import { BuyBid, SpendBid, usePayment, WithdrawnBid } from "../../Context";
 import { formatDistanceToNow } from "date-fns";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 export const Transaction = () => {
-  const { buyBids, spendBids, loading } = usePayment();
+  const { buyBids, spendBids, loading, withdrawnBids } = usePayment();
 
-  const sortByDate = (arr: Array<BuyBid | SpendBid>) => {
+  const sortByDate = (arr: Array<BuyBid | SpendBid | WithdrawnBid>) => {
     return arr.sort((a, b) => {
       const dateA =
         a.createdAt instanceof Timestamp
@@ -26,7 +26,11 @@ export const Transaction = () => {
     return formatDistanceToNow(timestamp, { addSuffix: true });
   };
 
-  const sortedTransactions = sortByDate([...buyBids, ...spendBids]);
+  const sortedTransactions = sortByDate([
+    ...buyBids,
+    ...spendBids,
+    ...withdrawnBids,
+  ]);
   const getStatusColor = (status: string) => {
     if (status === "completed") {
       return "bg-green-700";
@@ -34,6 +38,8 @@ export const Transaction = () => {
       return "bg-gray-400";
     } else if (status === "pending") {
       return "bg-yellow-600";
+    } else if (status === "withdrawn") {
+      return "bg-red-700";
     }
     return "bg-gray-500";
   };
@@ -71,13 +77,9 @@ export const Transaction = () => {
           </div>
         ) : (
           <div>
-            {sortedTransactions.map((transaction) => (
+            {sortedTransactions.map((transaction, i) => (
               <div
-                key={
-                  "txRef" in transaction
-                    ? transaction.txRef
-                    : `${transaction.user}-${transaction.reason}`
-                }
+                key={i}
                 className="bg-mainBackground rounded-lg shadow-lg p-4 mb-4"
               >
                 <div className="flex justify-between items-center gap-12">

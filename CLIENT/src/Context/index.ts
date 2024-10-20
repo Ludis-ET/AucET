@@ -26,5 +26,5 @@ export { AuthProvider } from "./AuthContext";
 export { PaymentProvider } from "./PaymentContext";
 
 export type { Profile } from "./AuthContext";
-export type { BuyBid, SpendBid } from "./PaymentContext";
+export type { BuyBid, SpendBid, WithdrawnBid } from "./PaymentContext";
 
