@@ -1,9 +1,13 @@
-import { Dashboard } from "./pages"
+import { Routes, Route } from "react-router-dom";
+import { Dashboard, Success } from "./pages";
 
-const Payment = () => {
+function App() {
   return (
-    <Dashboard />
-  )
+    <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/success" element={<Success />} />
+    </Routes>
+  );
 }
 
-export default Payment
+export default App;

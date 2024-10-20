@@ -7,7 +7,7 @@ export default {
         mainBackground: "#F5F5DC", // Light beige color
 
         // Secondary background
-        secondaryBackground: "#FFFDD0", // Cream color
+        secondaryBackground: "#FFFFFF", // Cream color
 
         // Button background
         buttonHover: "#F4A460", // Sandy brown color

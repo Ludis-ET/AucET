@@ -19,10 +19,10 @@ const App = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        {subdomain === "room" && <Route path="/" element={<Room />} />}
-        {subdomain === "payment" && <Route path="/" element={<Payment />} />}
-        {subdomain === "auth" && <Route path="/" element={<Auth />} />}
-        {subdomain === "" && <Route path="/" element={<Home />} />}
+        {subdomain === "room" && <Route path="*" element={<Room />} />}
+        {subdomain === "payment" && <Route path="*" element={<Payment />} />}
+        {subdomain === "auth" && <Route path="*" element={<Auth />} />}
+        {subdomain === "" && <Route path="*" element={<Home />} />}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Suspense>
