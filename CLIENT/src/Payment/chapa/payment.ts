@@ -50,17 +50,18 @@ export const handleSubmit = async (
   }
 };
 
-
 export const addSpendBid = async (
   profile: Profile,
   reason: string,
   amount: number
 ) => {
+  const bidAmount = Number(import.meta.env.VITE_BID_AMOUNT) || 100;
   try {
     const spendData = {
       user: profile.userId,
       reason,
-      amount,
+      bids: amount,
+      amount: amount * bidAmount,
       createdAt: new Date(),
     };
 

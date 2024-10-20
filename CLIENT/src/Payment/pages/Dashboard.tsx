@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { handleSubmit } from "../chapa";
-import { useAuth } from "../../Context";
+import { useAuth, usePayment } from "../../Context";
 
 export const Dashboard = () => {
   const { profile } = useAuth();
@@ -17,6 +17,9 @@ export const Dashboard = () => {
   const transactionFee = (totalAmount * transactionFeePercentage) / 100;
   const totalCost = totalAmount + transactionFee;
 
+
+  const { totalBoughtBids, totalSpentBids } = usePayment();
+
   return (
     <div className="bg-mainBackground h-screen overflow-hidden flex justify-center items-center p-4">
       <div className="bg-secondaryBackground p-8 rounded-lg min-w-96 shadow-lg">
@@ -25,7 +28,8 @@ export const Dashboard = () => {
             Ludis Payment Page
           </p>
           <span className="bg-buttonBackground text-white p-2 rounded-full flex gap-2 font-bold">
-            {numberOfBids} <span className="font-normal">BIDS</span>
+            {totalBoughtBids - totalSpentBids}{" "}
+            <span className="font-normal">BIDS</span>
           </span>
         </header>
         <main className="mt-4">
@@ -57,7 +61,7 @@ export const Dashboard = () => {
                 type="number"
                 value={numberOfBids}
                 onChange={(e) => setNumberOfBids(Number(e.target.value))}
-                className={`mt-1 border rounded-md p-2 w-full ${
+                className={`mt-1 border rounded-md outline-none p-2 w-full ${
                   error ? "border-red-500" : "border-gray-300"
                 }`}
                 min="1"
