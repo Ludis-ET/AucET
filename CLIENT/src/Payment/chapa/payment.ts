@@ -1,43 +1,41 @@
-import Chapa from "chapa";
+import { db } from "../../firebase";
+import { collection, addDoc } from "firebase/firestore";
 
-const chapaKey = "secret-key"; // Your Chapa secret key
-const myChapa = new Chapa(chapaKey);
+export const handleSubmit = async (
+  event: React.FormEvent<HTMLFormElement>,
+  numberOfBids: number,
+  bidAmount: number,
+  transactionFeePercentage: number,
+  txRef: string,
+  setError: React.Dispatch<React.SetStateAction<string>>
+) => {
+  event.preventDefault();
 
-// Customer information for the payment
-const customerInfo = {
-  amount: "100",
-  currency: "ETB",
-  email: "abebe@bikila.com",
-  first_name: "Abebe",
-  last_name: "Bikila",
-  callback_url: "https://chapa.co", // Your callback URL
-  customization: {
-    title: "I love e-commerce",
-    description: "It is time to pay",
-  },
-};
-
-// Initialize the payment using async/await
-export const initiatePayment = async () => {
-  try {
-    const response = await myChapa.initialize(customerInfo, { autoRef: true });
-    console.log("Payment Initialized:", response);
-
-    // Use response.data.checkout_url for redirect or next steps
-    const checkoutUrl = response.data.checkout_url;
-    return checkoutUrl; // You can return this or handle it further
-  } catch (error) {
-    console.error("Payment Initialization Failed:", error);
+  if (numberOfBids <= 0) {
+    setError("Number of bids must be greater than 0");
+    return;
   }
-};
 
-// Verify the transaction
-export const verifyPayment = async (txnRef: string) => {
+  setError("");
+
+  const totalAmount = numberOfBids * bidAmount;
+  const transactionFee = (totalAmount * transactionFeePercentage) / 100;
+  const totalCost = totalAmount + transactionFee;
+
+  const paymentData = {
+    txRef,
+    amount: totalAmount,
+    transactionFee,
+    totalCost,
+    numberOfBids,
+    status: "pending",
+    createdAt: new Date(),
+  };
+
   try {
-    const response = await myChapa.verify(txnRef);
-    console.log("Payment Verified:", response);
-    return response; // You can return this or handle it further
-  } catch (error) {
-    console.error("Payment Verification Failed:", error);
+    await addDoc(collection(db, "Buy-Bids"), paymentData);
+    (event.target as HTMLFormElement).submit();
+  } catch (e) {
+    console.error("Error adding document: ", e);
   }
 };

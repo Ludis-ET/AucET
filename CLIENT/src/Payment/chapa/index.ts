@@ -1,1 +1,1 @@
-export { initiatePayment } from "./payment";
+export { handleSubmit } from "./payment";

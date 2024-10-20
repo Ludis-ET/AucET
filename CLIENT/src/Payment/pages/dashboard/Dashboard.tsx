@@ -1,27 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { handleSubmit } from "../../chapa";
 
 export const Dashboard = () => {
   const publicKey = import.meta.env.VITE_CHAPA_AUTH;
-  const txRef = `negade-tx-${Date.now()}`;
-
+  const txRef = `aucet-tx-${Date.now()}`;
   const bidAmount = Number(import.meta.env.VITE_BID_AMOUNT) || 100;
   const transactionFeePercentage =
     Number(import.meta.env.VITE_TRANSACTION_FEE) || 0;
-
   const [numberOfBids, setNumberOfBids] = useState(1);
   const [error, setError] = useState("");
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (numberOfBids <= 0) {
-      setError("Number of bids must be greater than 0");
-      return;
-    }
-
-    setError("");
-    (event.target as HTMLFormElement).submit();
-  };
 
   const totalAmount = numberOfBids * bidAmount;
   const transactionFee = (totalAmount * transactionFeePercentage) / 100;
@@ -42,7 +29,16 @@ export const Dashboard = () => {
           <form
             method="POST"
             action="https://api.chapa.co/v1/hosted/pay"
-            onSubmit={handleSubmit}
+            onSubmit={(event) =>
+              handleSubmit(
+                event,
+                numberOfBids,
+                bidAmount,
+                transactionFeePercentage,
+                txRef,
+                setError
+              )
+            }
           >
             <input type="hidden" name="public_key" value={publicKey} />
             <input type="hidden" name="tx_ref" value={txRef} />
@@ -96,12 +92,12 @@ export const Dashboard = () => {
             <input
               type="hidden"
               name="callback_url"
-              value="http://payment.localhost:5173/" // Replace with your actual callback URL
+              value="http://payment.localhost:5173/success/:callback"
             />
             <input
               type="hidden"
               name="return_url"
-              value="http://payment.localhost:5173/" // Replace with your actual return URL
+              value="http://payment.localhost:5173/txref"
             />
             <input type="hidden" name="meta[title]" value="test" />
             <button

@@ -1,11 +1,13 @@
 import { Routes, Route } from "react-router-dom";
 import { Dashboard, Success } from "./pages";
+import { Callback } from "./pages/pay/CallBack";
 
 function App() {
   return (
     <Routes>
         <Route path="/" element={<Dashboard />} />
-        <Route path="/success" element={<Success />} />
+        <Route path="/return" element={<Success />} />
+        <Route path="/:txref" element={<Callback />} />
     </Routes>
   );
 }
