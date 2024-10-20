@@ -90,6 +90,7 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
     fetchSpendBids();
     fetchBuyBids();
   }, [profile]);
+
   const value = {
     totalSpent,
     totalBought,
@@ -98,6 +99,7 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
     totalBoughtBids,
     totalSpentBids,
   };
+
   return (
     <PaymentContext.Provider value={value}>{children}</PaymentContext.Provider>
   );
