@@ -92,12 +92,12 @@ export const Dashboard = () => {
             <input
               type="hidden"
               name="callback_url"
-              value="http://payment.localhost:5173/success/:callback"
+              value={`http://payment.localhost:5173/success/${txRef}`}
             />
             <input
               type="hidden"
               name="return_url"
-              value="http://payment.localhost:5173/txref"
+              value={`http://payment.localhost:5173/success/${txRef}`}
             />
             <input type="hidden" name="meta[title]" value="test" />
             <button

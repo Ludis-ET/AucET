@@ -1,5 +1,5 @@
 import { db } from "../../firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, updateDoc, query, where, getDocs } from "firebase/firestore";
 
 export const handleSubmit = async (
   event: React.FormEvent<HTMLFormElement>,
@@ -37,5 +37,35 @@ export const handleSubmit = async (
     (event.target as HTMLFormElement).submit();
   } catch (e) {
     console.error("Error adding document: ", e);
+  }
+};
+
+
+export const updatePaymentStatus = async (txref: string) => {
+  try {
+    if (txref) {
+      const paymentQuery = query(
+        collection(db, "Buy-Bids"),
+        where("txRef", "==", txref)
+      );
+
+      const querySnapshot = await getDocs(paymentQuery);
+
+      if (!querySnapshot.empty) {
+        const docRef = querySnapshot.docs[0].ref; 
+
+        await updateDoc(docRef, {
+          status: "completed",
+        });
+
+        console.log(`Payment status for ${txref} updated to completed.`);
+      } else {
+        console.error(`No payment found with txref: ${txref}`);
+      }
+    } else {
+      console.error("Transaction reference (txref) is undefined.");
+    }
+  } catch (error) {
+    console.error("Error updating payment status: ", error);
   }
 };

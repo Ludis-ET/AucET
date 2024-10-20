@@ -7,7 +7,7 @@ function App() {
     <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/return" element={<Success />} />
-        <Route path="/:txref" element={<Callback />} />
+        <Route path="/success/:txref" element={<Callback />} />
     </Routes>
   );
 }

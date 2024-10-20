@@ -1,34 +1,22 @@
 import { useEffect } from "react";
-import { db } from "../../../firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { useParams } from "react-router-dom";
+import { updatePaymentStatus } from "../../chapa";
 
 export const Callback = () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const txRef = urlParams.get("txRef");
-  const status = urlParams.get("status");
+  const { txref } = useParams<{ txref: string }>();
 
   useEffect(() => {
-    const updatePaymentStatus = async () => {
-      if (!txRef || !status) return;
-
-      try {
-        const paymentRef = doc(db, "payments", txRef);
-        await updateDoc(paymentRef, {
-          status: status === "successful" ? "completed" : "failed",
-        });
-        console.log("Payment status updated successfully");
-      } catch (error) {
-        console.error("Error updating payment status: ", error);
-      }
-    };
-
-    updatePaymentStatus();
-  }, [txRef, status]);
+    if (txref) {
+      updatePaymentStatus(txref);
+    }
+  }, [txref]);
 
   return (
     <div>
-      <h2>Payment Callback</h2>
-      <p>Payment status has been processed.</p>
+      <h1>Payment Status Update</h1>
+      <p>
+        Your payment status has been updated. Transaction Reference: {txref}
+      </p>
     </div>
   );
 };
