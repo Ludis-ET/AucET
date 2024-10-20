@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { usePayment } from "../../Context";
+import { useAuth, usePayment } from "../../Context";
+import { addWithdrawnBid } from "../chapa";
 
 export const Withdrawal = () => {
   const [amountETB, setAmountETB] = useState(0);
@@ -8,13 +9,14 @@ export const Withdrawal = () => {
   const { totalSpentBids, totalBoughtBids } = usePayment();
   const net = totalBoughtBids - totalSpentBids;
   const calc = import.meta.env.VITE_BID_AMOUNT;
+  const { profile } = useAuth();
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newAmount = Number(e.target.value);
     setAmountETB(newAmount);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     if (amountETB <= 1) {
@@ -26,11 +28,9 @@ export const Withdrawal = () => {
       return;
     }
     setLoading(true);
-
-    console.log("Withdrawn amount:", amountETB);
+    await addWithdrawnBid(profile, amountETB * calc, amountETB);
     setLoading(false);
   };
-
 
   return (
     <div className="bg-secondaryBackground p-8 rounded-lg max-w-[90vw] min-w-[20vw] shadow-lg">

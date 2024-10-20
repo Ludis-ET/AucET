@@ -1,1 +1,6 @@
-export { handleSubmit, updatePaymentStatus, addSpendBid } from "./payment";
+export {
+  handleSubmit,
+  updatePaymentStatus,
+  addSpendBid,
+  addWithdrawnBid,
+} from "./payment";
