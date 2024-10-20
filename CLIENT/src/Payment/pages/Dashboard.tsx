@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { handleSubmit } from "../../chapa";
-import { useAuth } from "../../../Context";
+import { handleSubmit } from "../chapa";
+import { useAuth } from "../../Context";
 
 export const Dashboard = () => {
   const { profile } = useAuth();
@@ -40,7 +40,7 @@ export const Dashboard = () => {
                 transactionFeePercentage,
                 txRef,
                 setError,
-                profile,
+                profile
               )
             }
           >

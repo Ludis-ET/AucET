@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { updatePaymentStatus } from "../../chapa";
+import { updatePaymentStatus } from "../chapa";
 
 export const Callback = () => {
   const { txref } = useParams<{ txref: string }>();
