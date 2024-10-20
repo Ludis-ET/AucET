@@ -3,6 +3,7 @@ import React, { useState } from "react";
 export const Dashboard = () => {
   const publicKey = import.meta.env.VITE_CHAPA_AUTH;
   const txRef = `negade-tx-${Date.now()}`;
+
   const bidAmount = Number(import.meta.env.VITE_BID_AMOUNT) || 100;
   const transactionFeePercentage =
     Number(import.meta.env.VITE_TRANSACTION_FEE) || 0;
@@ -10,11 +11,7 @@ export const Dashboard = () => {
   const [numberOfBids, setNumberOfBids] = useState(1);
   const [error, setError] = useState("");
 
-  const totalAmount = numberOfBids * bidAmount;
-  const transactionFee = (totalAmount * transactionFeePercentage) / 100;
-  const totalCost = totalAmount + transactionFee;
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (numberOfBids <= 0) {
@@ -23,57 +20,12 @@ export const Dashboard = () => {
     }
 
     setError("");
-
-    // Create headers for the request
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${publicKey}`); // Use the public key for authorization
-    myHeaders.append("Content-Type", "application/json");
-
-    // Create the request body
-    const raw = JSON.stringify({
-      amount: totalAmount.toString(), // Convert to string
-      currency: "ETB",
-      email: "leulsegedmelaku1020@gmail.com", // Your email or any dynamic email
-      first_name: "Israel",
-      last_name: "Goytom",
-      tx_ref: txRef,
-      callback_url: "http://payment.localhost:5173/success", // Replace with your actual callback URL
-      return_url: "http://payment.localhost:5173/success", // Replace with your actual return URL
-      customization: {
-        title: "Payment for my favourite merchant",
-        description: "I love online payments",
-      },
-      meta: {
-        hide_receipt: "true",
-      },
-    });
-
-    // Request options
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow" as RequestRedirect,
-    };
-
-    try {
-      const response = await fetch(
-        "https://api.chapa.co/v1/transaction/initialize",
-        requestOptions
-      );
-      const result = await response.json(); // Parse the JSON response
-
-      if (response.ok) {
-        // Redirect to the payment URL
-        window.location.href = result.data.link; // Assuming result.data.link contains the payment URL
-      } else {
-        setError(result.message || "Something went wrong. Please try again.");
-      }
-    } catch (error) {
-      console.log("Error:", error);
-      setError("Network error. Please try again.");
-    }
+    (event.target as HTMLFormElement).submit();
   };
+
+  const totalAmount = numberOfBids * bidAmount;
+  const transactionFee = (totalAmount * transactionFeePercentage) / 100;
+  const totalCost = totalAmount + transactionFee;
 
   return (
     <div className="bg-mainBackground h-screen overflow-hidden flex justify-center items-center p-4">
@@ -87,7 +39,13 @@ export const Dashboard = () => {
           </span>
         </header>
         <main className="mt-4">
-          <form onSubmit={handleSubmit}>
+          <form
+            method="POST"
+            action="https://api.chapa.co/v1/hosted/pay"
+            onSubmit={handleSubmit}
+          >
+            <input type="hidden" name="public_key" value={publicKey} />
+            <input type="hidden" name="tx_ref" value={txRef} />
             <div className="mb-4">
               <label
                 htmlFor="numberOfBids"
@@ -115,6 +73,37 @@ export const Dashboard = () => {
               Total Amount:{" "}
               <span className="font-bold">{totalCost.toFixed(2)} ETB</span>
             </p>
+            <input type="hidden" name="currency" value="ETB" />
+            <input
+              type="hidden"
+              name="email"
+              value="leulsegedmelaku1020@gmail.com"
+            />
+            <input type="hidden" name="first_name" value="Israel" />
+            <input type="hidden" name="last_name" value="Goytom" />
+            <input type="hidden" name="amount" value={totalAmount} />
+            <input type="hidden" name="title" value="Let us do this" />
+            <input
+              type="hidden"
+              name="description"
+              value="Paying with Confidence with Chapa"
+            />
+            <input
+              type="hidden"
+              name="logo"
+              value="https://chapa.link/asset/images/chapa_swirl.svg"
+            />
+            <input
+              type="hidden"
+              name="callback_url"
+              value="http://payment.localhost:5173/" // Replace with your actual callback URL
+            />
+            <input
+              type="hidden"
+              name="return_url"
+              value="http://payment.localhost:5173/" // Replace with your actual return URL
+            />
+            <input type="hidden" name="meta[title]" value="test" />
             <button
               type="submit"
               className="mt-6 bg-buttonBackground text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-buttonHover transition duration-300"
