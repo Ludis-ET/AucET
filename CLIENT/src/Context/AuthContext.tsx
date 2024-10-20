@@ -26,7 +26,7 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-interface Profile {
+export interface Profile {
   userId: string;
   email: string;
   displayName: string;

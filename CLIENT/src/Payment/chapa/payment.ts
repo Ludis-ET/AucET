@@ -1,5 +1,13 @@
+import { Profile } from "../../Context";
 import { db } from "../../firebase";
-import { collection, addDoc, updateDoc, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 
 export const handleSubmit = async (
   event: React.FormEvent<HTMLFormElement>,
@@ -7,7 +15,8 @@ export const handleSubmit = async (
   bidAmount: number,
   transactionFeePercentage: number,
   txRef: string,
-  setError: React.Dispatch<React.SetStateAction<string>>
+  setError: React.Dispatch<React.SetStateAction<string>>,
+  profile: Profile
 ) => {
   event.preventDefault();
 
@@ -30,6 +39,7 @@ export const handleSubmit = async (
     numberOfBids,
     status: "pending",
     createdAt: new Date(),
+    user: profile.userId,
   };
 
   try {
@@ -39,7 +49,6 @@ export const handleSubmit = async (
     console.error("Error adding document: ", e);
   }
 };
-
 
 export const updatePaymentStatus = async (txref: string) => {
   try {
@@ -52,7 +61,7 @@ export const updatePaymentStatus = async (txref: string) => {
       const querySnapshot = await getDocs(paymentQuery);
 
       if (!querySnapshot.empty) {
-        const docRef = querySnapshot.docs[0].ref; 
+        const docRef = querySnapshot.docs[0].ref;
 
         await updateDoc(docRef, {
           status: "completed",

@@ -24,3 +24,6 @@ export const usePayment = () => {
 
 export { AuthProvider } from "./AuthContext";
 export { PaymentProvider } from "./PaymentContext";
+
+export type { Profile } from "./AuthContext";
+

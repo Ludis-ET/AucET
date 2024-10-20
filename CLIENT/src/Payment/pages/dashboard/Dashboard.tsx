@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { handleSubmit } from "../../chapa";
+import { useAuth } from "../../../Context";
 
 export const Dashboard = () => {
+  const { profile } = useAuth();
+  const frontend = import.meta.env.VITE_FRONTEND_URL;
   const publicKey = import.meta.env.VITE_CHAPA_AUTH;
   const txRef = `aucet-tx-${Date.now()}`;
   const bidAmount = Number(import.meta.env.VITE_BID_AMOUNT) || 100;
@@ -36,7 +39,8 @@ export const Dashboard = () => {
                 bidAmount,
                 transactionFeePercentage,
                 txRef,
-                setError
+                setError,
+                profile,
               )
             }
           >
@@ -92,12 +96,12 @@ export const Dashboard = () => {
             <input
               type="hidden"
               name="callback_url"
-              value={`http://payment.localhost:5173/success/${txRef}`}
+              value={`${frontend}/payments/success/${txRef}`}
             />
             <input
               type="hidden"
               name="return_url"
-              value={`http://payment.localhost:5173/success/${txRef}`}
+              value={`${frontend}/payments/success/${txRef}`}
             />
             <input type="hidden" name="meta[title]" value="test" />
             <button
