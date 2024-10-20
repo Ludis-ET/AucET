@@ -30,6 +30,8 @@ export interface Profile {
   userId: string;
   email: string;
   displayName: string;
+  firstName: string;
+  lastName: string;
   photoURL: string;
   phoneNumber: string;
   phoneVerified: boolean;
@@ -43,6 +45,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     displayName: "",
     photoURL: "",
     phoneNumber: "",
+    firstName: "",
+    lastName: "",
     phoneVerified: false,
   });
   const [loading, setLoading] = useState(true);
@@ -76,6 +80,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           const newUser: Profile = {
             userId: currentUser.uid,
             email: currentUser.email || "",
+            firstName: "",
+            lastName: "",
             displayName: currentUser.displayName || "",
             photoURL: currentUser.photoURL || "",
             phoneNumber: "",

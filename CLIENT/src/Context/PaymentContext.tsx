@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { db } from "../firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { useAuth } from "."; 
+import { useAuth } from ".";
 
 interface SpendBid {
   user: string;
@@ -29,6 +29,7 @@ interface PaymentContextType {
   totalSpentBids: number;
   spendBids: SpendBid[];
   buyBids: BuyBid[];
+  loading: boolean;
 }
 
 export const PaymentContext = createContext<PaymentContextType | null>(null);
@@ -45,10 +46,13 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
   const [totalBought, setTotalBought] = useState<number>(0);
   const [totalBoughtBids, setTotalBoughtBids] = useState<number>(0);
   const [totalSpentBids, setTotalSpentBids] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchSpendBids = async () => {
+    const fetchData = async () => {
       if (!profile || !profile.userId) return;
+
+      setLoading(true);
 
       const spendCollection = collection(db, "Spend-Bids");
       const spendQuery = query(
@@ -64,10 +68,6 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
       setSpendBids(spendData);
       setTotalSpent(spendData.reduce((total, bid) => total + bid.amount, 0));
       setTotalSpentBids(spendData.reduce((total, bid) => total + bid.bids, 0));
-    };
-
-    const fetchBuyBids = async () => {
-      if (!profile || !profile.userId) return;
 
       const buyCollection = collection(db, "Buy-Bids");
       const buyQuery = query(
@@ -80,15 +80,22 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
         createdAt: doc.data().createdAt.toDate(),
       })) as BuyBid[];
 
-      setBuyBids(buyData);
-      setTotalBought(buyData.reduce((total, bid) => total + bid.amount, 0));
-      setTotalBoughtBids(
-        buyData.reduce((total, bid) => total + bid.numberOfBids, 0)
+      const completedBuyBids = buyData.filter(
+        (bid) => bid.status === "completed"
       );
+
+      setBuyBids(completedBuyBids);
+      setTotalBought(
+        completedBuyBids.reduce((total, bid) => total + bid.amount, 0)
+      );
+      setTotalBoughtBids(
+        completedBuyBids.reduce((total, bid) => total + bid.numberOfBids, 0)
+      );
+
+      setLoading(false);
     };
 
-    fetchSpendBids();
-    fetchBuyBids();
+    fetchData();
   }, [profile]);
 
   const value = {
@@ -98,6 +105,7 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
     buyBids,
     totalBoughtBids,
     totalSpentBids,
+    loading,
   };
 
   return (

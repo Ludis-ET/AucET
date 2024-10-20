@@ -1,23 +1,52 @@
 import { useState } from "react";
 import { handleSubmit } from "../chapa";
-import { useAuth, usePayment } from "../../Context";
+import { useAuth } from "../../Context";
+import { Bids } from ".";
 
-export const Dashboard = () => {
+export const BuyBid = () => {
   const frontend = import.meta.env.VITE_FRONTEND_URL;
   const publicKey = import.meta.env.VITE_CHAPA_AUTH;
   const txRef = `aucet-tx-${Date.now()}`;
   const bidAmount = Number(import.meta.env.VITE_BID_AMOUNT) || 100;
   const transactionFeePercentage =
     Number(import.meta.env.VITE_TRANSACTION_FEE) || 0;
+
+  const [amountETB, setAmountETB] = useState(0);
   const [numberOfBids, setNumberOfBids] = useState(1);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const totalAmount = numberOfBids * bidAmount;
+  const totalAmount = amountETB || numberOfBids * bidAmount;
   const transactionFee = (totalAmount * transactionFeePercentage) / 100;
   const totalCost = totalAmount + transactionFee;
 
-  const { totalBoughtBids, totalSpentBids } = usePayment();
   const { profile } = useAuth();
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newAmount = Number(e.target.value);
+    setAmountETB(newAmount);
+    setNumberOfBids(newAmount > 0 ? newAmount / bidAmount : 0);
+  };
+
+  const handleBidsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newBids = Number(e.target.value);
+    setNumberOfBids(newBids);
+    setAmountETB(newBids * bidAmount);
+  };
+
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
+    await handleSubmit(
+      event,
+      numberOfBids,
+      bidAmount,
+      transactionFeePercentage,
+      txRef,
+      setError,
+      profile
+    );
+    setLoading(false);
+  };
 
   return (
     <div className="bg-mainBackground h-screen overflow-hidden flex justify-center items-center p-4">
@@ -26,29 +55,38 @@ export const Dashboard = () => {
           <p className="text-mainText font-extrabold text-2xl">
             Ludis Payment Page
           </p>
-          <span className="bg-buttonBackground text-white p-2 rounded-full flex gap-2 font-bold">
-            {totalBoughtBids - totalSpentBids}{" "}
-            <span className="font-normal">BIDS</span>
-          </span>
+          <Bids />
         </header>
         <main className="mt-4">
           <form
             method="POST"
             action="https://api.chapa.co/v1/hosted/pay"
-            onSubmit={(event) =>
-              handleSubmit(
-                event,
-                numberOfBids,
-                bidAmount,
-                transactionFeePercentage,
-                txRef,
-                setError,
-                profile
-              )
-            }
+            onSubmit={handleFormSubmit}
           >
             <input type="hidden" name="public_key" value={publicKey} />
             <input type="hidden" name="tx_ref" value={txRef} />
+
+            <div className="mb-4">
+              <label
+                htmlFor="amountETB"
+                className="block text-mainText font-semibold"
+              >
+                Amount (ETB)
+              </label>
+              <input
+                type="number"
+                value={amountETB.toFixed(2)}
+                onChange={handleAmountChange}
+                className={`mt-1 border rounded-md outline-none p-2 w-full ${
+                  error ? "border-red-500" : "border-gray-300"
+                }`}
+                min="0"
+                step="0.01"
+                required
+              />
+              {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+            </div>
+
             <div className="mb-4">
               <label
                 htmlFor="numberOfBids"
@@ -58,16 +96,18 @@ export const Dashboard = () => {
               </label>
               <input
                 type="number"
-                value={numberOfBids}
-                onChange={(e) => setNumberOfBids(Number(e.target.value))}
+                value={numberOfBids.toFixed(2)}
+                onChange={handleBidsChange}
                 className={`mt-1 border rounded-md outline-none p-2 w-full ${
                   error ? "border-red-500" : "border-gray-300"
                 }`}
-                min="1"
+                min="0"
+                step="0.01"
                 required
               />
               {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
             </div>
+
             <p className="text-mainText">
               Transaction Fee:{" "}
               <span className="font-bold">{transactionFee.toFixed(2)} ETB</span>
@@ -77,13 +117,9 @@ export const Dashboard = () => {
               <span className="font-bold">{totalCost.toFixed(2)} ETB</span>
             </p>
             <input type="hidden" name="currency" value="ETB" />
-            <input
-              type="hidden"
-              name="email"
-              value="leulsegedmelaku1020@gmail.com"
-            />
-            <input type="hidden" name="first_name" value="Israel" />
-            <input type="hidden" name="last_name" value="Goytom" />
+            <input type="hidden" name="email" value={profile.email} />
+            <input type="hidden" name="first_name" value={profile.firstName} />
+            <input type="hidden" name="last_name" value={profile.lastName} />
             <input type="hidden" name="amount" value={totalAmount} />
             <input type="hidden" name="title" value="Let us do this" />
             <input
@@ -110,8 +146,9 @@ export const Dashboard = () => {
             <button
               type="submit"
               className="mt-6 bg-buttonBackground text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-buttonHover transition duration-300"
+              disabled={loading}
             >
-              Pay Now
+              {loading ? "Processing..." : "Pay Now"}
             </button>
           </form>
         </main>
