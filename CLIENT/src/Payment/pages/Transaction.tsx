@@ -38,7 +38,7 @@ export const Transaction = () => {
     return "bg-gray-500";
   };
   return (
-    <div className="bg-secondaryBackground p-8 rounded-lg max-w-[90vw] w-auto shadow-lg">
+    <div className="bg-secondaryBackground p-8 rounded-lg max-w-[90vw] min-w-[30vw] shadow-lg">
       <header className="flex justify-between items-center gap-20 border-b-2 pb-4">
         <p className="text-mainText font-extrabold text-2xl">
           Recent Transactions

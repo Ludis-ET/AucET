@@ -81,7 +81,7 @@ export const Dashboard = () => {
           </div>
         )}
       </div>
-      <div className="px-4 py-8 w-full sm:px-6 lg:px-20 flex gap-4 flex-wrap">
+      <div className="px-4 py-8 w-full sm:px-6 lg:px-20 flex gap-4 flex-wrap justify-center">
         <BuyBid />
         <Transaction />
         <Withdrawal />
