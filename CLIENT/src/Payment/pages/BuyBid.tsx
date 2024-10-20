@@ -49,110 +49,108 @@ export const BuyBid = () => {
   };
 
   return (
-    <div className="bg-mainBackground h-screen overflow-hidden flex justify-center items-center p-4">
-      <div className="bg-secondaryBackground p-8 rounded-lg min-w-96 shadow-lg">
-        <header className="flex justify-between items-center gap-20 border-b-2 pb-4">
-          <p className="text-mainText font-extrabold text-2xl">
-            Ludis Payment Page
-          </p>
-          <Bids />
-        </header>
-        <main className="mt-4">
-          <form
-            method="POST"
-            action="https://api.chapa.co/v1/hosted/pay"
-            onSubmit={handleFormSubmit}
-          >
-            <input type="hidden" name="public_key" value={publicKey} />
-            <input type="hidden" name="tx_ref" value={txRef} />
+    <div className="bg-secondaryBackground p-8 rounded-lg max-w-[90vw] w-96 shadow-lg">
+      <header className="flex justify-between items-center gap-20 border-b-2 pb-4">
+        <p className="text-mainText font-extrabold text-2xl">
+          Buy Bids
+        </p>
+        <Bids />
+      </header>
+      <main className="mt-4">
+        <form
+          method="POST"
+          action="https://api.chapa.co/v1/hosted/pay"
+          onSubmit={handleFormSubmit}
+        >
+          <input type="hidden" name="public_key" value={publicKey} />
+          <input type="hidden" name="tx_ref" value={txRef} />
 
-            <div className="mb-4">
-              <label
-                htmlFor="amountETB"
-                className="block text-mainText font-semibold"
-              >
-                Amount (ETB)
-              </label>
-              <input
-                type="number"
-                value={amountETB.toFixed(2)}
-                onChange={handleAmountChange}
-                className={`mt-1 border rounded-md outline-none p-2 w-full ${
-                  error ? "border-red-500" : "border-gray-300"
-                }`}
-                min="0"
-                step="0.01"
-                required
-              />
-              {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="numberOfBids"
-                className="block text-mainText font-semibold"
-              >
-                Number of Bids
-              </label>
-              <input
-                type="number"
-                value={numberOfBids.toFixed(2)}
-                onChange={handleBidsChange}
-                className={`mt-1 border rounded-md outline-none p-2 w-full ${
-                  error ? "border-red-500" : "border-gray-300"
-                }`}
-                min="0"
-                step="0.01"
-                required
-              />
-              {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-            </div>
-
-            <p className="text-mainText">
-              Transaction Fee:{" "}
-              <span className="font-bold">{transactionFee.toFixed(2)} ETB</span>
-            </p>
-            <p className="text-mainText">
-              Total Amount:{" "}
-              <span className="font-bold">{totalCost.toFixed(2)} ETB</span>
-            </p>
-            <input type="hidden" name="currency" value="ETB" />
-            <input type="hidden" name="email" value={profile.email} />
-            <input type="hidden" name="first_name" value={profile.firstName} />
-            <input type="hidden" name="last_name" value={profile.lastName} />
-            <input type="hidden" name="amount" value={totalAmount} />
-            <input type="hidden" name="title" value="Let us do this" />
-            <input
-              type="hidden"
-              name="description"
-              value="Paying with Confidence with Chapa"
-            />
-            <input
-              type="hidden"
-              name="logo"
-              value="https://chapa.link/asset/images/chapa_swirl.svg"
-            />
-            <input
-              type="hidden"
-              name="callback_url"
-              value={`${frontend}/payments/success/${txRef}`}
-            />
-            <input
-              type="hidden"
-              name="return_url"
-              value={`${frontend}/payments/success/${txRef}`}
-            />
-            <input type="hidden" name="meta[title]" value="test" />
-            <button
-              type="submit"
-              className="mt-6 bg-buttonBackground text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-buttonHover transition duration-300"
-              disabled={loading}
+          <div className="mb-4">
+            <label
+              htmlFor="amountETB"
+              className="block text-mainText font-semibold"
             >
-              {loading ? "Processing..." : "Pay Now"}
-            </button>
-          </form>
-        </main>
-      </div>
+              Amount (ETB)
+            </label>
+            <input
+              type="number"
+              value={amountETB.toFixed(2)}
+              onChange={handleAmountChange}
+              className={`mt-1 border rounded-md outline-none p-2 w-full ${
+                error ? "border-red-500" : "border-gray-300"
+              }`}
+              min="0"
+              step="0.01"
+              required
+            />
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="numberOfBids"
+              className="block text-mainText font-semibold"
+            >
+              Number of Bids
+            </label>
+            <input
+              type="number"
+              value={numberOfBids.toFixed(2)}
+              onChange={handleBidsChange}
+              className={`mt-1 border rounded-md outline-none p-2 w-full ${
+                error ? "border-red-500" : "border-gray-300"
+              }`}
+              min="0"
+              step="0.01"
+              required
+            />
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+          </div>
+
+          <p className="text-mainText">
+            Transaction Fee:{" "}
+            <span className="font-bold">{transactionFee.toFixed(2)} ETB</span>
+          </p>
+          <p className="text-mainText">
+            Total Amount:{" "}
+            <span className="font-bold">{totalCost.toFixed(2)} ETB</span>
+          </p>
+          <input type="hidden" name="currency" value="ETB" />
+          <input type="hidden" name="email" value={profile.email} />
+          <input type="hidden" name="first_name" value={profile.firstName} />
+          <input type="hidden" name="last_name" value={profile.lastName} />
+          <input type="hidden" name="amount" value={totalAmount} />
+          <input type="hidden" name="title" value="Let us do this" />
+          <input
+            type="hidden"
+            name="description"
+            value="Paying with Confidence with Chapa"
+          />
+          <input
+            type="hidden"
+            name="logo"
+            value="https://chapa.link/asset/images/chapa_swirl.svg"
+          />
+          <input
+            type="hidden"
+            name="callback_url"
+            value={`${frontend}/payments/success/${txRef}`}
+          />
+          <input
+            type="hidden"
+            name="return_url"
+            value={`${frontend}/payments/success/${txRef}`}
+          />
+          <input type="hidden" name="meta[title]" value="test" />
+          <button
+            type="submit"
+            className="mt-6 bg-buttonBackground text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-buttonHover transition duration-300"
+            disabled={loading}
+          >
+            {loading ? "Processing..." : "Pay Now"}
+          </button>
+        </form>
+      </main>
     </div>
   );
 };
