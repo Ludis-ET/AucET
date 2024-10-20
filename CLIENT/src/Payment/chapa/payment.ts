@@ -56,13 +56,15 @@ export const handleSubmit = async (
 export const addWithdrawnBid = async (
   profile: Profile,
   amount: number,
-  bids: number
+  bids: number,
+  phoneNumber: string
 ) => {
   try {
     const withdrawnBidData = {
       user: profile.userId,
       amount,
       bids,
+      phoneNumber,
       status: "withdrawn",
       createdAt: new Date(),
     };
