@@ -3,7 +3,6 @@ import { handleSubmit } from "../chapa";
 import { useAuth, usePayment } from "../../Context";
 
 export const Dashboard = () => {
-  const { profile } = useAuth();
   const frontend = import.meta.env.VITE_FRONTEND_URL;
   const publicKey = import.meta.env.VITE_CHAPA_AUTH;
   const txRef = `aucet-tx-${Date.now()}`;
@@ -17,8 +16,8 @@ export const Dashboard = () => {
   const transactionFee = (totalAmount * transactionFeePercentage) / 100;
   const totalCost = totalAmount + transactionFee;
 
-
   const { totalBoughtBids, totalSpentBids } = usePayment();
+  const { profile } = useAuth();
 
   return (
     <div className="bg-mainBackground h-screen overflow-hidden flex justify-center items-center p-4">

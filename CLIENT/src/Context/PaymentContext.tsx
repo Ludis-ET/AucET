@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { db } from "../firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { useAuth } from "."; // Ensure this path is correct
+import { useAuth } from "."; 
 
 interface SpendBid {
   user: string;
