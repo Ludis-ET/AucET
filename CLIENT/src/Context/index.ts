@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { AuthContext } from "./AuthContext";
+import { PaymentContext } from "./PaymentContext";
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -10,4 +11,16 @@ export const useAuth = () => {
 
   return context;
 };
+
+export const usePayment = () => {
+  const context = useContext(PaymentContext);
+
+  if (!context) {
+    throw new Error("usePayment must be used within a PaymentProvider");
+  }
+
+  return context;
+};
+
 export { AuthProvider } from "./AuthContext";
+export { PaymentProvider } from "./PaymentContext";
