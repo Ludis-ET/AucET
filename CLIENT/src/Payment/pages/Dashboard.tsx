@@ -2,7 +2,8 @@ import { usePayment } from "../../Context";
 import { BuyBid, Transaction, Withdrawal } from ".";
 
 export const Dashboard = () => {
-  const { totalBoughtBids, totalSpentBids, loading } = usePayment();
+  const { totalBoughtBids, totalSpentBids, loading, netTotalBids } =
+    usePayment();
 
   return (
     <div className="bg-mainBackground h-screen w-full">
@@ -13,7 +14,10 @@ export const Dashboard = () => {
         {loading ? (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-4 mt-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="bg-secondaryBackground overflow-hidden shadow sm:rounded-lg animate-pulse">
+              <div
+                key={i}
+                className="bg-secondaryBackground overflow-hidden shadow sm:rounded-lg animate-pulse"
+              >
                 <div className="px-4 py-5 sm:p-6">
                   <dl>
                     <dt className="text-sm leading-5 font-medium text-otherText truncate">
@@ -36,7 +40,7 @@ export const Dashboard = () => {
                     Total spent Bids
                   </dt>
                   <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText">
-                    {totalSpentBids} BIDS
+                    {totalSpentBids.toFixed(2)} BIDS
                   </dd>
                 </dl>
               </div>
@@ -49,7 +53,7 @@ export const Dashboard = () => {
                     Total Bought Bids
                   </dt>
                   <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText">
-                    {totalBoughtBids} BIDS
+                    {totalBoughtBids.toFixed(2)} BIDS
                   </dd>
                 </dl>
               </div>
@@ -73,7 +77,7 @@ export const Dashboard = () => {
                     Net Bids
                   </dt>
                   <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText">
-                    {totalBoughtBids - totalSpentBids} BIDS
+                    {netTotalBids.toFixed(2)} BIDS
                   </dd>
                 </dl>
               </div>

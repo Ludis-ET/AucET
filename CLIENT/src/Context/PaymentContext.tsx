@@ -23,13 +23,23 @@ export interface BuyBid {
   user: string;
 }
 
+export interface WithdrawnBid {
+  user: string;
+  amount: number;
+  bids: number;
+  status: string;
+  createdAt: Date;
+}
+
 interface PaymentState {
   totalSpent: number;
   totalBought: number;
   totalBoughtBids: number;
   totalSpentBids: number;
+  netTotalBids: number;
   spendBids: SpendBid[];
   buyBids: BuyBid[];
+  withdrawnBids: WithdrawnBid[];
   loading: boolean;
 }
 
@@ -46,8 +56,10 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
     totalBought: 0,
     totalBoughtBids: 0,
     totalSpentBids: 0,
+    netTotalBids: 0,
     spendBids: [],
     buyBids: [],
+    withdrawnBids: [],
     loading: true,
   });
 
@@ -101,13 +113,34 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
         0
       );
 
+      const withdrawnCollection = collection(db, "Withdrawn-Bids");
+      const withdrawnQuery = query(
+        withdrawnCollection,
+        where("user", "==", profile.userId)
+      );
+      const withdrawnSnapshot = await getDocs(withdrawnQuery);
+      const withdrawnData = withdrawnSnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        createdAt: doc.data().createdAt.toDate(),
+      })) as WithdrawnBid[];
+
+      const totalWithdrawnBids = withdrawnData.reduce(
+        (total, bid) => total + bid.bids,
+        0
+      );
+
+      const netTotalBids =
+        totalBoughtBids - (totalSpentBids + totalWithdrawnBids);
+
       setPaymentState({
         totalSpent,
         totalBought,
         totalBoughtBids,
         totalSpentBids,
+        netTotalBids,
         spendBids: spendData,
         buyBids: completedBuyBids,
+        withdrawnBids: withdrawnData,
         loading: false,
       });
     };

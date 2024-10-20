@@ -6,8 +6,7 @@ export const Withdrawal = () => {
   const [amountETB, setAmountETB] = useState(0);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { totalSpentBids, totalBoughtBids } = usePayment();
-  const net = totalBoughtBids - totalSpentBids;
+  const { netTotalBids } = usePayment();
   const calc = import.meta.env.VITE_BID_AMOUNT;
   const { profile } = useAuth();
 
@@ -23,7 +22,7 @@ export const Withdrawal = () => {
       setError("Amount must be greater than one.");
       return;
     }
-    if (amountETB > net) {
+    if (amountETB > netTotalBids) {
       setError("Insufficient funds.");
       return;
     }
