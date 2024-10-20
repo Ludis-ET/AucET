@@ -27,7 +27,16 @@ export const Transaction = () => {
   };
 
   const sortedTransactions = sortByDate([...buyBids, ...spendBids]);
-
+  const getStatusColor = (status: string) => {
+    if (status === "completed") {
+      return "bg-green-700";
+    } else if (status === "frozen") {
+      return "bg-gray-400";
+    } else if (status === "pending") {
+      return "bg-yellow-600";
+    }
+    return "bg-gray-500";
+  };
   return (
     <div className="bg-secondaryBackground p-8 rounded-lg max-w-[90vw] w-auto shadow-lg">
       <header className="flex justify-between items-center gap-20 border-b-2 pb-4">
@@ -39,10 +48,7 @@ export const Transaction = () => {
         {loading ? (
           <div>
             {[...Array(5)].map((_, index) => (
-              <div
-                key={index}
-                className="rounded-lg shadow-lg p-4 mb-4"
-              >
+              <div key={index} className="rounded-lg shadow-lg p-4 mb-4">
                 <div className="flex justify-between items-center gap-12">
                   <span>
                     <Skeleton
@@ -84,27 +90,15 @@ export const Transaction = () => {
                     </p>
                     <p>{transaction.status}</p>
                   </span>
-                  {"txRef" in transaction ? (
-                    <p
-                      className={`font-semibold rounded-full p-2 text-secondaryBackground ${
-                        transaction.status === "completed"
-                          ? "bg-green-700"
-                          : "bg-gray-500"
-                      }`}
-                    >
-                      +{transaction.numberOfBids}
-                    </p>
-                  ) : (
-                    <p
-                      className={`font-semibold rounded-full p-2 text-secondaryBackground ${
-                        transaction.status === "completed"
-                          ? "bg-red-700"
-                          : "bg-gray-500"
-                      }`}
-                    >
-                      -{transaction.bids}
-                    </p>
-                  )}
+                  <p
+                    className={`font-semibold rounded-full p-2 text-secondaryBackground ${getStatusColor(
+                      transaction.status
+                    )}`}
+                  >
+                    {"txRef" in transaction
+                      ? "+ " + transaction.numberOfBids
+                      : "- " + transaction.bids}
+                  </p>
                 </div>
               </div>
             ))}
