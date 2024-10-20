@@ -1,5 +1,5 @@
 import { usePayment } from "../../Context";
-import { BuyBid } from "./BuyBid";
+import { BuyBid, Transaction } from ".";
 
 export const Dashboard = () => {
   const { totalBoughtBids, totalSpentBids, loading } = usePayment();
@@ -67,6 +67,7 @@ export const Dashboard = () => {
       </div>
       <div className="px-4 py-8 w-full sm:px-6 lg:px-20 flex gap-4 flex-wrap">
         <BuyBid />
+        <Transaction />
       </div>
     </div>
   );

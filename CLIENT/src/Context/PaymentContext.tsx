@@ -3,15 +3,16 @@ import { db } from "../firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useAuth } from ".";
 
-interface SpendBid {
+export interface SpendBid {
   user: string;
   reason: string;
   amount: number;
+  status: string;
   bids: number;
   createdAt: Date;
 }
 
-interface BuyBid {
+export interface BuyBid {
   txRef: string;
   amount: number;
   transactionFee: number;
@@ -67,7 +68,6 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
         createdAt: doc.data().createdAt.toDate(),
       })) as SpendBid[];
 
-      
       const totalSpent = spendData.reduce(
         (total, bid) => total + bid.amount,
         0
@@ -77,7 +77,6 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
         0
       );
 
-      
       const buyCollection = collection(db, "Buy-Bids");
       const buyQuery = query(
         buyCollection,
@@ -89,12 +88,10 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
         createdAt: doc.data().createdAt.toDate(),
       })) as BuyBid[];
 
-      
       const completedBuyBids = buyData.filter(
         (bid) => bid.status === "completed"
       );
 
-      
       const totalBought = completedBuyBids.reduce(
         (total, bid) => total + bid.amount,
         0
@@ -104,7 +101,6 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
         0
       );
 
-      
       setPaymentState({
         totalSpent,
         totalBought,

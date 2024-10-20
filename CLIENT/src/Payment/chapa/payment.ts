@@ -61,6 +61,7 @@ export const addSpendBid = async (
       user: profile.userId,
       reason,
       bids: amount,
+      status: "frozen",
       amount: amount * bidAmount,
       createdAt: new Date(),
     };
