@@ -50,6 +50,26 @@ export const handleSubmit = async (
   }
 };
 
+
+export const addSpendBid = async (
+  profile: Profile,
+  reason: string,
+  amount: number
+) => {
+  try {
+    const spendData = {
+      user: profile.userId,
+      reason,
+      amount,
+      createdAt: new Date(),
+    };
+
+    await addDoc(collection(db, "Spend-Bids"), spendData);
+  } catch (error) {
+    console.error("Error adding spend record: ", error);
+  }
+};
+
 export const updatePaymentStatus = async (txref: string) => {
   try {
     if (txref) {
