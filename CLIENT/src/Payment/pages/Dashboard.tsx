@@ -1,5 +1,5 @@
 import { usePayment } from "../../Context";
-import { BuyBid, Transaction } from ".";
+import { BuyBid, Transaction, Withdrawal } from ".";
 
 export const Dashboard = () => {
   const { totalBoughtBids, totalSpentBids, loading } = usePayment();
@@ -11,52 +11,68 @@ export const Dashboard = () => {
           Payment Statistics
         </h2>
         {loading ? (
-          <div>Loading..</div>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-4 mt-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-secondaryBackground overflow-hidden shadow sm:rounded-lg animate-pulse">
+                <div className="px-4 py-5 sm:p-6">
+                  <dl>
+                    <dt className="text-sm leading-5 font-medium text-otherText truncate">
+                      <div className="h-4 bg-gray-300 rounded w-2/3"></div>
+                    </dt>
+                    <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText">
+                      <div className="h-10 bg-gray-300 rounded w-1/3"></div>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-4 mt-4">
-            <div className="bg-secondaryBackground overflow-hidden shadow sm:rounded-lg ">
+            <div className="bg-secondaryBackground overflow-hidden shadow sm:rounded-lg">
               <div className="px-4 py-5 sm:p-6">
                 <dl>
-                  <dt className="text-sm leading-5 font-medium text-otherText truncate ">
+                  <dt className="text-sm leading-5 font-medium text-otherText truncate">
                     Total spent Bids
                   </dt>
-                  <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText ">
+                  <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText">
                     {totalSpentBids} BIDS
                   </dd>
                 </dl>
               </div>
             </div>
-            <div className="bg-secondaryBackground overflow-hidden shadow sm:rounded-lg ">
+            {/* Repeat for other data blocks */}
+            <div className="bg-secondaryBackground overflow-hidden shadow sm:rounded-lg">
               <div className="px-4 py-5 sm:p-6">
                 <dl>
-                  <dt className="text-sm leading-5 font-medium text-otherText truncate ">
+                  <dt className="text-sm leading-5 font-medium text-otherText truncate">
                     Total Bought Bids
                   </dt>
-                  <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText ">
+                  <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText">
                     {totalBoughtBids} BIDS
                   </dd>
                 </dl>
               </div>
             </div>
-            <div className="bg-secondaryBackground overflow-hidden shadow sm:rounded-lg ">
+            <div className="bg-secondaryBackground overflow-hidden shadow sm:rounded-lg">
               <div className="px-4 py-5 sm:p-6">
                 <dl>
-                  <dt className="text-sm leading-5 font-medium text-otherText truncate ">
+                  <dt className="text-sm leading-5 font-medium text-otherText truncate">
                     Total Frozen Bids
                   </dt>
-                  <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText ">
+                  <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText">
                     0 BIDS
                   </dd>
                 </dl>
               </div>
             </div>
-            <div className="bg-secondaryBackground overflow-hidden shadow sm:rounded-lg ">
+            <div className="bg-secondaryBackground overflow-hidden shadow sm:rounded-lg">
               <div className="px-4 py-5 sm:p-6">
                 <dl>
-                  <dt className="text-sm leading-5 font-medium text-otherText truncate ">
+                  <dt className="text-sm leading-5 font-medium text-otherText truncate">
                     Net Bids
                   </dt>
-                  <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText ">
+                  <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText">
                     {totalBoughtBids - totalSpentBids} BIDS
                   </dd>
                 </dl>
@@ -68,6 +84,7 @@ export const Dashboard = () => {
       <div className="px-4 py-8 w-full sm:px-6 lg:px-20 flex gap-4 flex-wrap">
         <BuyBid />
         <Transaction />
+        <Withdrawal />
       </div>
     </div>
   );
