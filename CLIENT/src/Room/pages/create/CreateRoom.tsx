@@ -21,8 +21,8 @@ export const CreateRoom = () => {
 
   return (
     <div className="container mx-auto py-8 px-4 bg-mainBackground rounded-lg shadow-lg">
-      <div className="grid grid-cols-5 gap-8">
-        <div className="col-span-full md:col-span-1 flex flex-col space-y-4 bg-secondaryBackground p-4 rounded-lg shadow-md">
+      <div className="grid grid-cols-5 gap-8 h-[70vh]">
+        <div className="col-span-full hidden md:flex md:col-span-1 flex-col space-y-4 bg-secondaryBackground p-4 rounded-lg shadow-md gap-2 py-12">
           <button
             className={`p-3 font-semibold rounded-lg transition-colors ${
               currentStep === 1
