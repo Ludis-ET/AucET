@@ -2,15 +2,16 @@ import { useState } from "react";
 import { Step1 } from "./Step1";
 import toast from "react-hot-toast";
 import { Step2 } from "./Step2";
+import { Timestamp } from "firebase/firestore";
 
 export interface SteProps {
-  form: string[];
-  click: (i: number, value: string) => void;
+  form: (string | Timestamp)[];
+  click: (i: number, value: string | Timestamp) => void;
 }
 
 export const CreateRoom = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [form, setForm] = useState<{ [key: number]: string[] }>({
+  const [form, setForm] = useState<{ [key: number]: (string | Timestamp)[] }>({
     1: ["", "", ""],
     2: [""],
   });
@@ -25,11 +26,12 @@ export const CreateRoom = () => {
 
   const prevStep = () => setCurrentStep((prev) => prev - 1);
 
-  const click = (step: number, index: number, value: string) => {
+  const click = (step: number, index: number, value: string | Timestamp) => {
     const newStepForm = [...form[step]];
     newStepForm[index] = value;
     setForm((prevForm) => ({ ...prevForm, [step]: newStepForm }));
   };
+
 
   const countFilledFields = (requiredCount: number) => {
     const filledFields = form[currentStep].filter(
