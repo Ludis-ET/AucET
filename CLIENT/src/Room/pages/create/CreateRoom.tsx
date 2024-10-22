@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Step1 } from "./Step1";
+import { Timestamp } from "firebase/firestore";
 import toast from "react-hot-toast";
+import { Step1 } from "./Step1";
 import { Step2 } from "./Step2";
 import { Step3 } from "./Step3";
-import { Timestamp } from "firebase/firestore";
+import { Step4 } from "./Step4";
 
 export interface SteProps {
   form: (string | Timestamp)[];
@@ -42,18 +43,26 @@ export const CreateRoom = () => {
     return filledFields === requiredCount;
   };
 
- const renderStep = () => {
-   switch (currentStep) {
-     case 1:
-       return <Step1 form={form[1]} click={(i, value) => click(1, i, value)} />;
-     case 2:
-       return <Step2 form={form[2]} click={(i, value) => click(2, i, value)} />;
-     case 3:
-       return <Step3 form={form[3]} click={(i, value) => click(3, i, value)} />; 
-     default:
-       return <div>end</div>;
-   }
- };
+  const renderStep = () => {
+    switch (currentStep) {
+      case 4:
+        return (
+          <Step1 form={form[1]} click={(i, value) => click(1, i, value)} />
+        );
+      case 2:
+        return (
+          <Step2 form={form[2]} click={(i, value) => click(2, i, value)} />
+        );
+      case 3:
+        return (
+          <Step3 form={form[3]} click={(i, value) => click(3, i, value)} />
+        );
+      case 1:
+        return <Step4 />;
+      default:
+        return <div>end</div>;
+    }
+  };
 
   return (
     <div className="container mx-auto py-8 px-4 bg-mainBackground rounded-lg shadow-lg">
