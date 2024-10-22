@@ -13,7 +13,7 @@ export const CreateRoom = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [form, setForm] = useState<{ [key: number]: (string | Timestamp)[] }>({
     1: ["", "", ""],
-    2: [""],
+    2: ["", ""],
   });
 
   const nextStep = (count: number) => {
@@ -75,7 +75,7 @@ export const CreateRoom = () => {
               }
             }}
           >
-            User Info
+            General Info
           </button>
 
           <button
@@ -92,7 +92,7 @@ export const CreateRoom = () => {
               }
             }}
           >
-            Account Info
+            Time
           </button>
         </div>
 
@@ -111,7 +111,7 @@ export const CreateRoom = () => {
             {currentStep < 3 && (
               <button
                 onClick={() => nextStep(form[currentStep].length)}
-                className="px-6 py-3 font-semibold bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition-colors"
+                className="px-6 py-3 font-semibold bg-buttonBackground text-white rounded-lg shadow hover:bg-buttonHover transition-colors"
               >
                 Next
               </button>
