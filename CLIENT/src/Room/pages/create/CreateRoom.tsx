@@ -65,15 +65,6 @@ export const CreateRoom = () => {
                 ? "bg-buttonBackground text-white"
                 : "bg-gray-200 text-otherText"
             }`}
-            onClick={() => {
-              if (countFilledFields(form[1].length)) {
-                setCurrentStep(1);
-              } else {
-                toast.error(
-                  "Please fill in all the fields for the current step."
-                );
-              }
-            }}
           >
             General Info
           </button>
@@ -84,13 +75,6 @@ export const CreateRoom = () => {
                 ? "bg-buttonBackground text-white"
                 : "bg-gray-200 text-otherText"
             }`}
-            onClick={() => {
-              if (countFilledFields(form[1].length)) {
-                setCurrentStep(2);
-              } else {
-                toast.error("Please fill in all the fields for User Info.");
-              }
-            }}
           >
             Time
           </button>
@@ -101,13 +85,6 @@ export const CreateRoom = () => {
                 ? "bg-buttonBackground text-white"
                 : "bg-gray-200 text-otherText"
             }`}
-            onClick={() => {
-              if (countFilledFields(form[1].length)) {
-                setCurrentStep(3);
-              } else {
-                toast.error("Please fill in all the fields for Time Info.");
-              }
-            }}
           >
             Description
           </button>
