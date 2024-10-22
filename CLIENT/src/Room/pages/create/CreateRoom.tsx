@@ -4,18 +4,25 @@ import { Step2 } from "./Step2";
 
 export const CreateRoom = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [form, setForm] = useState(["", ""]);
 
   const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => prev - 1);
 
+  const click = (i: number, value: string) => {
+    const newForm = [...form];
+    newForm[i] = value;
+    setForm(newForm);
+  };
+
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <Step1 />;
+        return <Step1 form={form} click={click} />;
       case 2:
         return <Step2 />;
       default:
-        return <Step1 />;
+        return <Step1 form={form} click={click} />;
     }
   };
 
