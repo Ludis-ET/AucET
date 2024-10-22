@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Step1 } from "./Step1";
 import toast from "react-hot-toast";
 import { Step2 } from "./Step2";
+import { Step3 } from "./Step3";
 import { Timestamp } from "firebase/firestore";
 
 export interface SteProps {
@@ -14,6 +15,7 @@ export const CreateRoom = () => {
   const [form, setForm] = useState<{ [key: number]: (string | Timestamp)[] }>({
     1: ["", "", ""],
     2: ["", ""],
+    3: ["", "", "", "", "", ""],
   });
 
   const nextStep = (count: number) => {
@@ -32,7 +34,6 @@ export const CreateRoom = () => {
     setForm((prevForm) => ({ ...prevForm, [step]: newStepForm }));
   };
 
-
   const countFilledFields = (requiredCount: number) => {
     const filledFields = form[currentStep].filter(
       (field) => field !== ""
@@ -50,6 +51,8 @@ export const CreateRoom = () => {
         return (
           <Step2 form={form[2]} click={(i, value) => click(2, i, value)} />
         );
+      case 3:
+        return <Step3 />;
       default:
         return <div>end</div>;
     }
@@ -93,6 +96,23 @@ export const CreateRoom = () => {
             }}
           >
             Time
+          </button>
+
+          <button
+            className={`p-3 font-semibold rounded-lg transition-colors ${
+              currentStep === 3
+                ? "bg-buttonBackground text-white"
+                : "bg-gray-200 text-otherText"
+            }`}
+            onClick={() => {
+              if (countFilledFields(form[1].length)) {
+                setCurrentStep(3);
+              } else {
+                toast.error("Please fill in all the fields for Time Info.");
+              }
+            }}
+          >
+            Upload Medias
           </button>
         </div>
 
