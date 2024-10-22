@@ -1,28 +1,55 @@
 import { useState } from "react";
 import { Step1 } from "./Step1";
+import toast from "react-hot-toast";
 import { Step2 } from "./Step2";
+
+export interface SteProps {
+  form: string[];
+  click: (i: number, value: string) => void;
+}
 
 export const CreateRoom = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [form, setForm] = useState(["", ""]);
+  const [form, setForm] = useState<{ [key: number]: string[] }>({
+    1: ["", "", ""],
+    2: [""],
+  });
 
-  const nextStep = () => setCurrentStep((prev) => prev + 1);
+  const nextStep = (count: number) => {
+    if (countFilledFields(count)) {
+      setCurrentStep((prev) => prev + 1);
+    } else {
+      toast.error("Please fill in all the fields for the current step.");
+    }
+  };
+
   const prevStep = () => setCurrentStep((prev) => prev - 1);
 
-  const click = (i: number, value: string) => {
-    const newForm = [...form];
-    newForm[i] = value;
-    setForm(newForm);
+  const click = (step: number, index: number, value: string) => {
+    const newStepForm = [...form[step]];
+    newStepForm[index] = value;
+    setForm((prevForm) => ({ ...prevForm, [step]: newStepForm }));
+  };
+
+  const countFilledFields = (requiredCount: number) => {
+    const filledFields = form[currentStep].filter(
+      (field) => field !== ""
+    ).length;
+    return filledFields === requiredCount;
   };
 
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <Step1 form={form} click={click} />;
+        return (
+          <Step1 form={form[1]} click={(i, value) => click(1, i, value)} />
+        );
       case 2:
-        return <Step2 />;
+        return (
+          <Step2 form={form[2]} click={(i, value) => click(2, i, value)} />
+        );
       default:
-        return <Step1 form={form} click={click} />;
+        return <div>end</div>;
     }
   };
 
@@ -36,29 +63,34 @@ export const CreateRoom = () => {
                 ? "bg-buttonBackground text-white"
                 : "bg-gray-200 text-otherText"
             }`}
-            onClick={() => setCurrentStep(1)}
+            onClick={() => {
+              if (countFilledFields(form[1].length)) {
+                setCurrentStep(1);
+              } else {
+                toast.error(
+                  "Please fill in all the fields for the current step."
+                );
+              }
+            }}
           >
             User Info
           </button>
+
           <button
             className={`p-3 font-semibold rounded-lg transition-colors ${
               currentStep === 2
                 ? "bg-buttonBackground text-white"
                 : "bg-gray-200 text-otherText"
             }`}
-            onClick={() => setCurrentStep(2)}
+            onClick={() => {
+              if (countFilledFields(form[1].length)) {
+                setCurrentStep(2);
+              } else {
+                toast.error("Please fill in all the fields for User Info.");
+              }
+            }}
           >
             Account Info
-          </button>
-          <button
-            className={`p-3 font-semibold rounded-lg transition-colors ${
-              currentStep === 3
-                ? "bg-buttonBackground text-white"
-                : "bg-gray-200 text-otherText"
-            }`}
-            onClick={() => setCurrentStep(3)}
-          >
-            Social Accounts
           </button>
         </div>
 
@@ -76,7 +108,7 @@ export const CreateRoom = () => {
             )}
             {currentStep < 3 && (
               <button
-                onClick={nextStep}
+                onClick={() => nextStep(form[currentStep].length)}
                 className="px-6 py-3 font-semibold bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition-colors"
               >
                 Next

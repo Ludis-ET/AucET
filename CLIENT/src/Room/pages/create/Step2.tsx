@@ -1,4 +1,6 @@
-export const Step2 = () => {
+import { SteProps } from "./CreateRoom";
+
+export const Step2 = ({ form, click }: SteProps) => {
   return (
     <div className="p-4">
       <h3 className="font-medium">1. User Info</h3>
@@ -14,4 +16,4 @@ export const Step2 = () => {
       />
     </div>
   );
-}
+};

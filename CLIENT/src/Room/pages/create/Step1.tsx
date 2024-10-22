@@ -1,9 +1,6 @@
-interface Props {
-  form: string[];
-  click: (i: number, value: string) => void;
-}
+import { SteProps } from "./CreateRoom";
 
-export const Step1 = ({ form, click }: Props) => {
+export const Step1 = ({ form, click }: SteProps) => {
   const normal =
     "p-8 border-2 flex justify-center items-center cursor-pointer hover:bg-buttonBackground transform duration-[0.4s] hover:text-white border-buttonBackground rounded-lg w-40 text-center text-2xl font-bold";
   const clicked =
@@ -12,7 +9,7 @@ export const Step1 = ({ form, click }: Props) => {
   return (
     <div className="p-4 flex flex-col gap-4">
       <div className="flex flex-col gap-2">
-        <h3 className="font-medium">1. Do you going to sell or buy ?</h3>
+        <h3 className="font-medium">1. Are you going to sell or buy?</h3>
         <div className="flex ml-8 gap-4">
           <p
             className={form[0] === "sell" ? clicked : normal}
@@ -30,7 +27,7 @@ export const Step1 = ({ form, click }: Props) => {
       </div>
       <div className="flex flex-col gap-2">
         <h3 className="font-medium">
-          2. Do you want the autcion room to be closed or open to users ?
+          2. Do you want the auction room to be closed or open to users?
         </h3>
         <div className="flex ml-8 gap-4">
           <p
@@ -49,7 +46,7 @@ export const Step1 = ({ form, click }: Props) => {
       </div>
       <div className="flex flex-col gap-2">
         <h3 className="font-medium">
-          3. How do you want it to be of the starting bid of the auction
+          3. What should be the starting bid of the auction?
         </h3>
         <div className="flex ml-8 gap-4">
           <p
