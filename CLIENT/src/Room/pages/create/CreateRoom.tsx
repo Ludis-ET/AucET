@@ -15,7 +15,8 @@ export const CreateRoom = () => {
   const [form, setForm] = useState<{ [key: number]: (string | Timestamp)[] }>({
     1: ["", "", ""],
     2: ["", ""],
-    3: ["", "", "", "", "", ""],
+    3: ["ludis"],
+    4: [],
   });
 
   const nextStep = (count: number) => {
@@ -41,22 +42,18 @@ export const CreateRoom = () => {
     return filledFields === requiredCount;
   };
 
-  const renderStep = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          <Step1 form={form[1]} click={(i, value) => click(1, i, value)} />
-        );
-      case 2:
-        return (
-          <Step2 form={form[2]} click={(i, value) => click(2, i, value)} />
-        );
-      case 3:
-        return <Step3 />;
-      default:
-        return <div>end</div>;
-    }
-  };
+ const renderStep = () => {
+   switch (currentStep) {
+     case 1:
+       return <Step1 form={form[1]} click={(i, value) => click(1, i, value)} />;
+     case 2:
+       return <Step2 form={form[2]} click={(i, value) => click(2, i, value)} />;
+     case 3:
+       return <Step3 form={form[3]} click={(i, value) => click(3, i, value)} />; 
+     default:
+       return <div>end</div>;
+   }
+ };
 
   return (
     <div className="container mx-auto py-8 px-4 bg-mainBackground rounded-lg shadow-lg">
@@ -112,7 +109,7 @@ export const CreateRoom = () => {
               }
             }}
           >
-            Upload Medias
+            Description
           </button>
         </div>
 
@@ -128,7 +125,7 @@ export const CreateRoom = () => {
                 Previous
               </button>
             )}
-            {currentStep < 3 && (
+            {currentStep < 5 && (
               <button
                 onClick={() => nextStep(form[currentStep].length)}
                 className="px-6 py-3 font-semibold bg-buttonBackground text-white rounded-lg shadow hover:bg-buttonHover transition-colors"
