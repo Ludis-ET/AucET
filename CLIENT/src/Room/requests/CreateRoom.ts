@@ -18,7 +18,7 @@ const uploadFileToFirebase = async (file: File, folder: string) => {
 };
 
 export const uploadData = async (
-  form: { [key: number]: (string | Timestamp)[] },
+  newFormValues: { [key: string]: string[] },
   files: File[],
   videoFile: File | null,
   coverPhotoIndex: number | null
@@ -39,7 +39,7 @@ export const uploadData = async (
     }
 
     const dataToSave = {
-      form,
+      newFormValues,
       images: imageUrls,
       video: videoUrl,
       coverPhoto: coverPhotoIndex !== null ? imageUrls[coverPhotoIndex] : null,
