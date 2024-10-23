@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { SteProps } from "./CreateRoom";
 
-export const Step2 = ({ form, click }: SteProps) => {
+export const Step2 = ({ form, click, current }: SteProps) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [duration, setDuration] = useState<number | "">("");
 
@@ -34,7 +34,7 @@ export const Step2 = ({ form, click }: SteProps) => {
         </h3>
         <div className="md:ml-8">
           <DatePicker
-            selected={startDate}
+            selected={startDate ? startDate : current[0]}
             onChange={handleDateChange}
             showTimeSelect
             dateFormat="Pp"
@@ -51,7 +51,7 @@ export const Step2 = ({ form, click }: SteProps) => {
         </h3>
         <input
           type="number"
-          value={duration}
+          value={duration ? duration : current[1]}
           onChange={handleDurationChange}
           className="border-2 border-brown-500 rounded-lg p-2 outline-none w-40 md:ml-8"
           placeholder="Duration in hours"

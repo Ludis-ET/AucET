@@ -10,6 +10,7 @@ import { Step5 } from "./Step5";
 export interface SteProps {
   form: (string | Timestamp)[];
   click: (i: number, value: string | Timestamp) => void;
+  current?: (string | Timestamp)[];
 }
 
 export const CreateRoom = () => {
@@ -52,7 +53,7 @@ export const CreateRoom = () => {
         );
       case 2:
         return (
-          <Step2 form={form[1]} click={(i, value) => click(2, i, value)} />
+          <Step2 form={form[1]} click={(i, value) => click(2, i, value)} current={form[2]} />
         );
       case 3:
         return (
