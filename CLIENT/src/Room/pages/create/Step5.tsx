@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Timestamp } from "firebase/firestore";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-hot-toast";
+import { uploadData } from "../../requests"; 
 
 interface Props {
   form: { [key: number]: (string | Timestamp)[] };
@@ -11,8 +12,7 @@ export const Step5 = ({ form }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
   const [coverPhotoIndex, setCoverPhotoIndex] = useState<number | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
-
-  console.log(form, files, videoFile, coverPhotoIndex)
+  const [isLoading, setIsLoading] = useState(false);
 
   const onDrop = (acceptedFiles: File[]) => {
     const images = acceptedFiles.filter((file) =>
@@ -53,6 +53,28 @@ export const Step5 = ({ form }: Props) => {
       return newFiles;
     });
     toast.success("Image updated successfully!");
+  };
+
+  const handleSubmit = async () => {
+    if (files.length === 0 || !form) {
+      toast.error("Please upload files and fill the form before submitting.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const documentId = await uploadData(
+        form,
+        files,
+        videoFile,
+        coverPhotoIndex
+      );
+      toast.success(`Data uploaded successfully! Document ID: ${documentId}`);
+    } catch (error) {
+      console.error("Error during submission:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -127,6 +149,14 @@ export const Step5 = ({ form }: Props) => {
           />
         </div>
       )}
+
+      <button
+        onClick={handleSubmit}
+        className="bg-blue-500 text-white rounded-lg px-4 py-2 mt-4"
+        disabled={isLoading}
+      >
+        {isLoading ? "Loding...." : "Submit"}
+      </button>
     </div>
   );
 };
