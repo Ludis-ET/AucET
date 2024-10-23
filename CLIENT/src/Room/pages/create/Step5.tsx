@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Timestamp } from "firebase/firestore";
-import { useDropzone } from "react-dropzone";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { uploadData } from "../../requests";
+import { useDropzone } from "react-dropzone";
+import { Timestamp } from "firebase/firestore";
 import { useAuth } from "../../../Context";
+import { uploadData } from "../../requests";
 
 interface Props {
   form: { [key: number]: (string | Timestamp)[] };
@@ -22,6 +23,7 @@ export const Step5 = ({ form }: Props) => {
   };
   const newFormValues: { [key: string]: string } = {};
   const { profile } = useAuth();
+  const navigate = useNavigate(); 
 
   Object.keys(form).forEach((key) => {
     const numKey = Number(key);
@@ -50,10 +52,6 @@ export const Step5 = ({ form }: Props) => {
         toast.error("Video file size must not exceed 3MB.");
         return;
       }
-      setVideoFile(video);
-      toast.success("Video uploaded successfully!");
-    }
-    if (video) {
       setVideoFile(video);
       toast.success("Video uploaded successfully!");
     }
@@ -94,6 +92,8 @@ export const Step5 = ({ form }: Props) => {
         profile
       );
       toast.success(`Data uploaded successfully! Document ID: ${documentId}`);
+
+      navigate("/");
     } catch (error) {
       console.error("Error during submission:", error);
     } finally {

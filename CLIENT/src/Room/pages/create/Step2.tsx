@@ -68,7 +68,7 @@ export const Step2 = ({ form, click, current }: SteProps) => {
             value={
               typeof current?.[2] === "string" || typeof current?.[2] === "number"
                 ? current?.[2] ?? ""
-                : duration
+                : 1
             }
             className="border-2 border-brown-500 rounded-lg p-2 outline-none w-40 md:ml-8"
             placeholder="In terms of Bid."
