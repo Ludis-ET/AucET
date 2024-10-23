@@ -8,6 +8,7 @@ export const Step3 = ({ form, click }: SteProps) => {
         className="outline-none border-2 border-buttonBackground rounded-xl min-h-[50vh] p-3"
         value={typeof form[0] === "string" ? form[0] : ""}
         onChange={(e) => click(0, e.target.value)} 
+        placeholder="Insert a comprehensive description"
       ></textarea>
     </div>
   );

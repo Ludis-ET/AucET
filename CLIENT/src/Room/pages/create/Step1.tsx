@@ -4,7 +4,7 @@ export const Step1 = ({ form, click }: SteProps) => {
   const normal =
     "md:p-8 p-2 border-2 flex justify-center items-center cursor-pointer hover:bg-buttonBackground transform duration-[0.4s] hover:text-white border-buttonBackground rounded-lg  text-center md:text-2xl font-bold";
   const clicked =
-    "md:p-8 p-2 border-2 flex justify-center items-center cursor-pointer bg-buttonBackground hover:bg-white transform duration-[0.4s] text-white hover:text-buttonBackground border-buttonBackground rounded-lg   text-center md:text-2xl font-bold";
+    "md:p-8 p-2 border-2 flex justify-center items-center cursor-pointer bg-buttonBackground transform duration-[0.4s] text-white  border-buttonBackground rounded-lg   text-center md:text-2xl font-bold";
 
   return (
     <div className="p-4 flex flex-col gap-4">

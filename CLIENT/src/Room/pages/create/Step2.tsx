@@ -34,7 +34,7 @@ export const Step2 = ({ form, click, current }: SteProps) => {
         </h3>
         <div className="md:ml-8">
           <DatePicker
-            selected={startDate ? startDate : current[0]}
+            selected={startDate ? startDate : (current?.[0] instanceof Date ? current[0] : null)}
             onChange={handleDateChange}
             showTimeSelect
             dateFormat="Pp"
@@ -51,7 +51,7 @@ export const Step2 = ({ form, click, current }: SteProps) => {
         </h3>
         <input
           type="number"
-          value={duration ? duration : current[1]}
+          value={typeof current?.[1] === "string" || typeof current?.[1] === "number" ? current[1] : duration}
           onChange={handleDurationChange}
           className="border-2 border-brown-500 rounded-lg p-2 outline-none w-40 md:ml-8"
           placeholder="Duration in hours"
@@ -64,7 +64,12 @@ export const Step2 = ({ form, click, current }: SteProps) => {
           <h3 className="font-medium">3. Set the starting bid amount</h3>
           <input
             type="number"
-            onChange={(e) => click(0, e.target.value)}
+            onChange={(e) => click(2, e.target.value)}
+            value={
+              typeof current?.[2] === "string" || typeof current?.[2] === "number"
+                ? current?.[2] ?? ""
+                : duration
+            }
             className="border-2 border-brown-500 rounded-lg p-2 outline-none w-40 md:ml-8"
             placeholder="In terms of Bid."
             min="0.01"
