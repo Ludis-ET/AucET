@@ -2,6 +2,8 @@ import { getFirestore, Timestamp, doc, setDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-hot-toast";
+import { addSpendBid } from "../../Payment/chapa";
+import { Profile } from "../../Context";
 
 const uploadFileToFirebase = async (file: File, folder: string) => {
   try {
@@ -21,12 +23,13 @@ export const uploadData = async (
   newFormValues: { [key: string]: string },
   files: File[],
   videoFile: File | null,
-  coverPhotoIndex: number | null
+  coverPhotoIndex: number | null,
+  profile:Profile
 ) => {
   try {
     const firestore = getFirestore();
     const documentId = uuidv4();
-    const docRef = doc(firestore, "your-collection-name", documentId);
+    const docRef = doc(firestore, "New-Rooms", documentId);
 
     const imageUploadPromises = files.map((file) =>
       uploadFileToFirebase(file, "images")
@@ -47,6 +50,7 @@ export const uploadData = async (
     };
 
     await setDoc(docRef, dataToSave);
+    await addSpendBid(profile, "Room Creation", 2);
     toast.success("Data uploaded successfully!");
     return documentId;
   } catch (error) {

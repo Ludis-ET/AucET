@@ -3,6 +3,7 @@ import { Timestamp } from "firebase/firestore";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-hot-toast";
 import { uploadData } from "../../requests";
+import { useAuth } from "../../../Context";
 
 interface Props {
   form: { [key: number]: (string | Timestamp)[] };
@@ -20,6 +21,8 @@ export const Step5 = ({ form }: Props) => {
     4: ["type"],
   };
   const newFormValues: { [key: string]: string } = {};
+  const { profile } = useAuth();
+
   Object.keys(form).forEach((key) => {
     const numKey = Number(key);
     for (let i = 0; i < (form[numKey] as (string | Timestamp)[]).length; i++) {
@@ -76,7 +79,7 @@ export const Step5 = ({ form }: Props) => {
   };
 
   const handleSubmit = async () => {
-    if (files.length === 0 || !form) {
+    if (files.length === 0 || !form || !videoFile) {
       toast.error("Please upload files and fill the form before submitting.");
       return;
     }
@@ -87,7 +90,8 @@ export const Step5 = ({ form }: Props) => {
         newFormValues,
         files,
         videoFile,
-        coverPhotoIndex
+        coverPhotoIndex,
+        profile
       );
       toast.success(`Data uploaded successfully! Document ID: ${documentId}`);
     } catch (error) {

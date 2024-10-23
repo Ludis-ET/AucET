@@ -1,8 +1,11 @@
 import { FaCheck } from "react-icons/fa6";
 import { FcCheckmark } from "react-icons/fc";
 import { SteProps } from "./CreateRoom";
+import { usePayment } from "../../../Context";
+import toast from "react-hot-toast";
 
 export const Step4 = ({ form, click }: SteProps) => {
+  const { netTotalBids } = usePayment();
   return (
     <div className="">
       <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 items-center gap-y-6 sm:mt-20 sm:gap-y-0 lg:max-w-4xl lg:grid-cols-2">
@@ -90,10 +93,17 @@ export const Step4 = ({ form, click }: SteProps) => {
           </ul>
           <a
             aria-describedby="tier-enterprise"
-            onClick={() => click(0, "large")}
+            onClick={() => {
+              if (netTotalBids < 2) {
+                toast.error("you don't have enough bids");
+                click(0, "small");
+              } else {
+                click(0, "large");
+              }
+            }}
             className="mt-8 block rounded-md cursor-pointer bg-buttonBackground px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-buttonHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10"
           >
-            Choose{form[0] === 'large' && "d"}
+            Choose{form[0] === "large" && "d"}
           </a>
         </div>
       </div>
