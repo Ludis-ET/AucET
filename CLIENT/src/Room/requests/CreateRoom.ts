@@ -24,7 +24,7 @@ export const uploadData = async (
   files: File[],
   videoFile: File | null,
   coverPhotoIndex: number | null,
-  profile:Profile
+  profile: Profile
 ) => {
   try {
     const firestore = getFirestore();
@@ -45,6 +45,7 @@ export const uploadData = async (
       newFormValues,
       images: imageUrls,
       video: videoUrl,
+      creator: profile.userId,
       coverPhoto: coverPhotoIndex !== null ? imageUrls[coverPhotoIndex] : null,
       createdAt: Timestamp.now(),
     };
