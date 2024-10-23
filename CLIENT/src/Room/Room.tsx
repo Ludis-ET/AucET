@@ -1,11 +1,12 @@
-import { CreateRoom } from "./pages";
+import { Route, Routes } from "react-router-dom";
+import { CreateRoom, View } from "./pages";
 
 const Room = () => {
   return (
-    <div className="bg-mainBackground min-h-screen p-8">
-      <h1 className="py-4 text-2xl md:text-4xl font-extrabold text-center text-buttonBackground">Create Auction Room</h1>
-      <CreateRoom />
-    </div>
+    <Routes>
+      <Route path="/" element={<View />} />
+      <Route path="/create" element={<CreateRoom />} />
+    </Routes>
   );
 };
 

@@ -71,80 +71,85 @@ export const CreateRoom = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4 bg-mainBackground rounded-lg shadow-lg">
-      <div className="grid grid-cols-5 gap-8 h-[70vh]">
-        <div className="col-span-full hidden md:flex md:col-span-1 flex-col space-y-4 bg-secondaryBackground p-4 rounded-lg shadow-md gap-2 py-12">
-          <button
-            className={`p-3 font-semibold rounded-lg transition-colors ${
-              currentStep === 1
-                ? "bg-buttonBackground text-white"
-                : "bg-gray-200 text-otherText"
-            }`}
-          >
-            General Info
-          </button>
+    <div className="bg-mainBackground min-h-screen p-8">
+      <h1 className="py-4 text-2xl md:text-4xl font-extrabold text-center text-buttonBackground">
+        Create Auction Room
+      </h1>
+      <div className="container mx-auto py-8 px-4 bg-mainBackground rounded-lg shadow-lg">
+        <div className="grid grid-cols-5 gap-8 h-[70vh]">
+          <div className="col-span-full hidden md:flex md:col-span-1 flex-col space-y-4 bg-secondaryBackground p-4 rounded-lg shadow-md gap-2 py-12">
+            <button
+              className={`p-3 font-semibold rounded-lg transition-colors ${
+                currentStep === 1
+                  ? "bg-buttonBackground text-white"
+                  : "bg-gray-200 text-otherText"
+              }`}
+            >
+              General Info
+            </button>
 
-          <button
-            className={`p-3 font-semibold rounded-lg transition-colors ${
-              currentStep === 2
-                ? "bg-buttonBackground text-white"
-                : "bg-gray-200 text-otherText"
-            }`}
-          >
-            Time & Cost
-          </button>
+            <button
+              className={`p-3 font-semibold rounded-lg transition-colors ${
+                currentStep === 2
+                  ? "bg-buttonBackground text-white"
+                  : "bg-gray-200 text-otherText"
+              }`}
+            >
+              Time & Cost
+            </button>
 
-          <button
-            className={`p-3 font-semibold rounded-lg transition-colors ${
-              currentStep === 3
-                ? "bg-buttonBackground text-white"
-                : "bg-gray-200 text-otherText"
-            }`}
-          >
-            Description
-          </button>
+            <button
+              className={`p-3 font-semibold rounded-lg transition-colors ${
+                currentStep === 3
+                  ? "bg-buttonBackground text-white"
+                  : "bg-gray-200 text-otherText"
+              }`}
+            >
+              Description
+            </button>
 
-          <button
-            className={`p-3 font-semibold rounded-lg transition-colors ${
-              currentStep === 4
-                ? "bg-buttonBackground text-white"
-                : "bg-gray-200 text-otherText"
-            }`}
-          >
-            Room Level
-          </button>
+            <button
+              className={`p-3 font-semibold rounded-lg transition-colors ${
+                currentStep === 4
+                  ? "bg-buttonBackground text-white"
+                  : "bg-gray-200 text-otherText"
+              }`}
+            >
+              Room Level
+            </button>
 
-          <button
-            className={`p-3 font-semibold rounded-lg transition-colors ${
-              currentStep === 5
-                ? "bg-buttonBackground text-white"
-                : "bg-gray-200 text-otherText"
-            }`}
-          >
-           Media Files
-          </button>
-        </div>
+            <button
+              className={`p-3 font-semibold rounded-lg transition-colors ${
+                currentStep === 5
+                  ? "bg-buttonBackground text-white"
+                  : "bg-gray-200 text-otherText"
+              }`}
+            >
+              Media Files
+            </button>
+          </div>
 
-        <div className="col-span-full md:col-span-4 bg-secondaryBackground p-6 rounded-lg shadow-md">
-          {renderStep()}
+          <div className="col-span-full md:col-span-4 bg-secondaryBackground p-6 rounded-lg shadow-md">
+            {renderStep()}
 
-          <div className="flex justify-between mt-6">
-            {currentStep > 1 && (
-              <button
-                onClick={prevStep}
-                className="px-6 py-3 font-semibold bg-gray-300 rounded-lg shadow hover:bg-gray-400 transition-colors"
-              >
-                Previous
-              </button>
-            )}
-            {currentStep < 5 && (
-              <button
-                onClick={() => nextStep(form[currentStep].length)}
-                className="px-6 py-3 font-semibold bg-buttonBackground text-white rounded-lg shadow hover:bg-buttonHover transition-colors"
-              >
-                Next
-              </button>
-            )}
+            <div className="flex justify-between mt-6">
+              {currentStep > 1 && (
+                <button
+                  onClick={prevStep}
+                  className="px-6 py-3 font-semibold bg-gray-300 rounded-lg shadow hover:bg-gray-400 transition-colors"
+                >
+                  Previous
+                </button>
+              )}
+              {currentStep < 5 && (
+                <button
+                  onClick={() => nextStep(form[currentStep].length)}
+                  className="px-6 py-3 font-semibold bg-buttonBackground text-white rounded-lg shadow hover:bg-buttonHover transition-colors"
+                >
+                  Next
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
