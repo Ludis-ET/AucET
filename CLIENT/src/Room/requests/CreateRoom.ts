@@ -18,7 +18,7 @@ const uploadFileToFirebase = async (file: File, folder: string) => {
 };
 
 export const uploadData = async (
-  newFormValues: { [key: string]: string[] },
+  newFormValues: { [key: string]: string },
   files: File[],
   videoFile: File | null,
   coverPhotoIndex: number | null

@@ -19,11 +19,11 @@ export const Step5 = ({ form }: Props) => {
     3: ["description"],
     4: ["type"],
   };
-  const newFormValues: { [key: string]: string[] } = {};
+  const newFormValues: { [key: string]: string } = {};
   Object.keys(form).forEach((key) => {
     const numKey = Number(key);
     for (let i = 0; i < (form[numKey] as (string | Timestamp)[]).length; i++) {
-      newFormValues[names[numKey][i]] = [form[numKey][i] as string];
+      newFormValues[names[numKey][i]] = form[numKey][i] as string;
     }
   });
 
@@ -102,9 +102,14 @@ export const Step5 = ({ form }: Props) => {
     accept: { "image/*": [], "video/*": [] },
   });
 
-if (!isLoading) {
-  return <>LOding</>
-}
+  if (isLoading) {
+    return (
+      <div className="w-full h-[50vh] flex flex-col gap-4 items-center justify-center">
+        <div className="loader"></div>
+        <h1 className="text-2xl font-bold text-buttonBackground">Uploading</h1>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -172,7 +177,7 @@ if (!isLoading) {
       )}
       <button
         onClick={handleSubmit}
-        className="bg-blue-500 text-white rounded-lg px-4 py-2 mt-4"
+        className="bg-buttonBackground hover:bg-buttonHover text-white rounded-lg px-4 py-2 mt-4"
         disabled={isLoading}
       >
         Submit
