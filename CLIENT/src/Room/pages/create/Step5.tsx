@@ -1,11 +1,18 @@
 import { useState } from "react";
+import { Timestamp } from "firebase/firestore";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-hot-toast";
 
-export const Step5 = () => {
+interface Props {
+  form: { [key: number]: (string | Timestamp)[] };
+}
+
+export const Step5 = ({ form }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
   const [coverPhotoIndex, setCoverPhotoIndex] = useState<number | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
+
+  console.log(form, files, videoFile, coverPhotoIndex)
 
   const onDrop = (acceptedFiles: File[]) => {
     const images = acceptedFiles.filter((file) =>
@@ -18,7 +25,6 @@ export const Step5 = () => {
       return;
     }
 
-    // Accept images immediately
     if (images.length > 0) {
       setFiles((prevFiles) => [...prevFiles, images[0]]);
       toast.success("Image uploaded successfully!");
@@ -121,8 +127,6 @@ export const Step5 = () => {
           />
         </div>
       )}
-
-      {/* Add further steps or a submit button here if needed */}
     </div>
   );
 };

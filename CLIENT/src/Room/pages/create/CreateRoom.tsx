@@ -63,7 +63,7 @@ export const CreateRoom = () => {
           <Step4 form={form[4]} click={(i, value) => click(4, i, value)} />
         );
       case 5:
-        return <Step5 />
+        return <Step5 form={form} />
       default:
         return <div>end</div>;
     }
