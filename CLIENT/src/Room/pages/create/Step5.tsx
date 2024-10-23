@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-hot-toast";
 
-export const Step3 = () => {
+export const Step5 = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [coverPhotoIndex, setCoverPhotoIndex] = useState<number | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);

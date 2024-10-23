@@ -1,7 +1,8 @@
 import { FaCheck } from "react-icons/fa6";
 import { FcCheckmark } from "react-icons/fc";
+import { SteProps } from "./CreateRoom";
 
-export const Step4 = () => {
+export const Step4 = ({ form, click }: SteProps) => {
   return (
     <div className="">
       <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 items-center gap-y-6 sm:mt-20 sm:gap-y-0 lg:max-w-4xl lg:grid-cols-2">
@@ -39,11 +40,11 @@ export const Step4 = () => {
             </li>
           </ul>
           <a
-            href="#"
             aria-describedby="tier-hobby"
-            className="mt-8 block rounded-md px-3.5 py-2.5 text-center text-sm font-semibold text-buttonBackground ring-1 ring-inset ring-buttonBackground hover:ring-buttonBackground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:mt-10"
+            onClick={() => click(0, "small")}
+            className="mt-8 block rounded-md cursor-pointer px-3.5 py-2.5 text-center text-sm font-semibold text-buttonBackground ring-1 ring-inset ring-buttonBackground hover:ring-buttonBackground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:mt-10"
           >
-            Get started today
+            Choose{form[0] == "small" && "d"}
           </a>
         </div>
         <div className="relative rounded-3xl bg-gray-900 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10">
@@ -88,11 +89,11 @@ export const Step4 = () => {
             </li>
           </ul>
           <a
-            href="#"
             aria-describedby="tier-enterprise"
-            className="mt-8 block rounded-md bg-buttonBackground px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-buttonHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10"
+            onClick={() => click(0, "large")}
+            className="mt-8 block rounded-md cursor-pointer bg-buttonBackground px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-buttonHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10"
           >
-            Choose
+            Choose{form[0] === 'large' && "d"}
           </a>
         </div>
       </div>
