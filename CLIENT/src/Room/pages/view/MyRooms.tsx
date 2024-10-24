@@ -33,7 +33,7 @@ export const MyRooms = () => {
         ) : (
           <>
             {room.map((r) => (
-              <RoomCard key={r.id} />
+              <RoomCard key={r.id} room={r} />
             ))}
           </>
         )}

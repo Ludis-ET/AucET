@@ -1,8 +1,11 @@
-export const RoomCard = () => {
+import { RoomType } from "../requests";
+
+export const RoomCard = ({ room }: { room: RoomType }) => {
+    console.log(room)
   return (
     <div className="relative flex w-80 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
       <img
-        src="https://imgs.search.brave.com/nxnHEmUp7DJy_DNvdJT0OBsQJzdymb6nR7IZwEb7Tb0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9keWwz/NDdoaXd2M2N0LmNs/b3VkZnJvbnQubmV0/L2FwcC91cGxvYWRz/LzIwMjMvMDkvTW9i/aWxlLWJhbm5lci1D/YXJlZXJzLndlYnA"
+        src={room.coverPhoto}
         alt=""
         className="relative mx-4 -mt-6 h-40 overflow-hidden rounded-xl bg-blue-gray-500 bg-clip-border text-white shadow-lg shadow-blue-gray-500/40 bg-gradient-to-r from-blue-500 to-blue-600"
       />

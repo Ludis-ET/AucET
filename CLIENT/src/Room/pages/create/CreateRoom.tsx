@@ -18,7 +18,7 @@ export const CreateRoom = () => {
   const [form, setForm] = useState<{ [key: number]: (string | Timestamp)[] }>({
     1: ["", "", ""],
     2: ["", ""],
-    3: [""],
+    3: ["",""],
     4: [""],
   });
 

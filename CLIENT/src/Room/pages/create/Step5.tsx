@@ -18,7 +18,7 @@ export const Step5 = ({ form }: Props) => {
   const names: { [key: string]: string[] } = {
     1: ["Buy/Sell", "Visibility", "starter"],
     2: ["start date", "duration", "bid"],
-    3: ["description"],
+    3: ["description","name"],
     4: ["type"],
   };
   const newFormValues: { [key: string]: string } = {};
@@ -93,7 +93,7 @@ export const Step5 = ({ form }: Props) => {
       );
       toast.success(`Data uploaded successfully! Document ID: ${documentId}`);
 
-      navigate("/");
+      navigate("/rooms");
     } catch (error) {
       console.error("Error during submission:", error);
     } finally {
