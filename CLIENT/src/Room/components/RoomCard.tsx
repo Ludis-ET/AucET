@@ -1,30 +1,50 @@
 import { RoomType } from "../requests";
+import Countdown from "react-countdown";
 
 export const RoomCard = ({ room }: { room: RoomType }) => {
-    console.log(room)
+  const targetDate = typeof room.newFormValues.startdate !== 'string'
+    ? room.newFormValues.startdate.toDate().getTime()
+    : new Date(room.newFormValues.startdate).getTime();
+
   return (
-    <div className="relative flex w-80 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
+    <div className="relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
       <img
         src={room.coverPhoto}
         alt=""
-        className="relative mx-4 -mt-6 h-40 overflow-hidden rounded-xl bg-blue-gray-500 bg-clip-border text-white shadow-lg shadow-blue-gray-500/40 bg-gradient-to-r from-blue-500 to-blue-600"
+        className="relative mx-4 -mt-6 h-40 overflow-hidden rounded-xl bg-brown-gray-500 bg-clip-border text-white shadow-lg shadow-brown-gray-500/40 bg-gradient-to-r from-brown-500 to-brown-600"
       />
       <div className="p-6">
-        <h5 className="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
-          Tailwind card
+        <h5 className="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-brown-gray-900 antialiased">
+          {typeof room.newFormValues.name === "string"
+            ? room.newFormValues.name
+            : ""}
         </h5>
         <p className="block font-sans text-base font-light leading-relaxed text-inherit antialiased">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc felis
-          ligula.
+          {typeof room.newFormValues.description === "string" &&
+            room.newFormValues.description.slice(0, 100)}
+          ...
         </p>
       </div>
       <div className="p-6 pt-0 flex justify-between">
         <button
           data-ripple-light="true"
           type="button"
-          className="select-none rounded-lg bg-blue-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+          className="select-none rounded-lg bg-buttonBackground py-3 px-6 text-center align-middle font-sans text-lg font-bold uppercase text-white shadow-md shadow-brown-500/20 transition-all hover:shadow-lg hover:shadow-brown-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
         >
-          Read More
+          <Countdown
+            date={targetDate}
+            renderer={({ days, hours, minutes, seconds, completed }) => {
+              if (completed) {
+                return <span>Time's up!</span>;
+              } else {
+                return (
+                  <span>
+                    {days}d {hours}h {minutes}m {seconds}s
+                  </span>
+                );
+              }
+            }}
+          />
         </button>
         <div className="flex -space-x-4 items-center">
           <img

@@ -9,12 +9,12 @@ import { db } from "../../firebase";
 import { Profile } from "../../Context";
 
 export interface RoomType {
-  id:string;
+  id: string;
   coverPhoto: string;
   video: string;
   createdAt: Timestamp;
   images: string[];
-  newFormValues: { [key: number]: (string | Timestamp)[] };
+  newFormValues: Record<string, string | Timestamp>;
 }
 
 export const getRoom = async (profile: Profile): Promise<RoomType[] | null> => {

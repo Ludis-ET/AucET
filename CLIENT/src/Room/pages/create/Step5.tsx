@@ -17,7 +17,7 @@ export const Step5 = ({ form }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const names: { [key: string]: string[] } = {
     1: ["Buy/Sell", "Visibility", "starter"],
-    2: ["start date", "duration", "bid"],
+    2: ["startdate", "duration", "bid"],
     3: ["description","name"],
     4: ["type"],
   };

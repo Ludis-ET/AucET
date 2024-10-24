@@ -1,3 +1,3 @@
 export { uploadData } from "./CreateRoom";
-export { getRoom } from "./GetRoom";
-export type { RoomType } from "./GetRoom";
+export { getRoom } from "./GetRooms";
+export type { RoomType } from "./GetRooms";
