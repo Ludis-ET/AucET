@@ -8,7 +8,8 @@ import {
 import { db } from "../../firebase";
 import { Profile } from "../../Context";
 
-interface RoomType {
+export interface RoomType {
+  id:string;
   coverPhoto: string;
   video: string;
   createdAt: Timestamp;
@@ -16,15 +17,14 @@ interface RoomType {
   newFormValues: { [key: number]: (string | Timestamp)[] };
 }
 
-export const getRoom = async (profile: Profile): Promise<RoomType | null> => {
+export const getRoom = async (profile: Profile): Promise<RoomType[] | null> => {
   try {
-    const fireRoom = collection(db, "New-Room");
+    const fireRoom = collection(db, "New-Rooms");
     const myRoom = query(fireRoom, where("creator", "==", profile.userId));
     const querySnapshot = await getDocs(myRoom);
-    const roomData =
-      querySnapshot.docs.map((doc) => doc.data() as RoomType)[0] || null;
+    const roomData = querySnapshot.docs.map((doc) => doc.data() as RoomType);
 
-    return roomData;
+    return roomData.length > 0 ? roomData : null;
   } catch (error) {
     console.error("Error fetching room:", error);
     return null;

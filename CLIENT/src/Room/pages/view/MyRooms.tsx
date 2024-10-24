@@ -2,17 +2,20 @@ import { useEffect, useState } from "react";
 import { RoomCard } from "../../components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { getRoom } from "../../requests";
+import { getRoom, RoomType } from "../../requests";
 import { useAuth } from "../../../Context";
 
 export const MyRooms = () => {
   const [loading, setLoading] = useState(true);
+  const [room, setRoom] = useState<RoomType[] | null>(null);
   const { profile } = useAuth();
 
   useEffect(() => {
     const fetchRooms = async () => {
       setLoading(true);
-      await getRoom(profile);
+      const response = await getRoom(profile);
+      console.log(response)
+      setRoom(response);
       setLoading(false);
     };
     fetchRooms();
@@ -21,7 +24,7 @@ export const MyRooms = () => {
   return (
     <div className="col-span-2">
       <div className="w-full flex flex-wrap gap-12 p-12">
-        {loading ? (
+        {loading || !room ? (
           <>
             {[1, 2, 4, 5, 6, 7, 8, 9, 0, 11, 22, 23, 24, 25].map((k) => (
               <RoomCardSkeleton key={k} />
@@ -29,10 +32,9 @@ export const MyRooms = () => {
           </>
         ) : (
           <>
-            <RoomCard />
-            <RoomCard />
-            <RoomCard />
-            <RoomCard />
+            {room.map((r) => (
+              <RoomCard key={r.id} />
+            ))}
           </>
         )}
       </div>
