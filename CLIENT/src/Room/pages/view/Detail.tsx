@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { RoomType } from "../../requests";
 import { getRoomById } from "../../requests/GetRooms";
+import { Timestamp } from "firebase/firestore";
 
 export const Detail = () => {
   const { id } = useParams();
@@ -53,9 +54,9 @@ export const Detail = () => {
   };
 
   if (loading) return <div>Loading...</div>;
-
+  const check = (val: string | Timestamp) => typeof val === "string";
   return (
-    <div className="col-span-3">
+    <div className="col-span-4 md:col-span-3">
       <div className="grid gap-4">
         <div>
           {mainMedia && (
@@ -63,6 +64,7 @@ export const Detail = () => {
               className="h-auto w-full max-w-full rounded-lg object-cover object-center md:h-[480px]"
               controls
               autoPlay
+              loop
               muted
               src={mainMedia}
             />
@@ -75,10 +77,13 @@ export const Detail = () => {
                 src={image}
                 className="object-cover object-center max-h-40 w-full rounded-lg cursor-pointer"
                 alt={`gallery-image-${index}`}
-                onClick={() => openModal(index)} // Open modal with current index
+                onClick={() => openModal(index)}
               />
             </div>
           ))}
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold text-buttonBackground">{check(room.newFormValues.name) && room.newFormValues.name}</h1>
         </div>
       </div>
 

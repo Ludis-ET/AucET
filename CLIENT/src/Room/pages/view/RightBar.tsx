@@ -5,7 +5,7 @@ export const RightBar = () => {
   const { profile } = useAuth();
   
   return (
-    <div className="col-span-1 bg-secondaryBackground sticky top-12 p-8 rounded-xl">
+    <div className="col-span-1 hidden md:block bg-secondaryBackground sticky top-12 p-8 rounded-xl">
       <div className="w-full flex flex-col gap-4 items-center">
         <img
           src={
