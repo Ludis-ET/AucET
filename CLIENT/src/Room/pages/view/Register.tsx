@@ -113,18 +113,24 @@ export const Register = ({
       registerUserWithConfirmation();
     }
   };
-  console.log(bidAmount);
-  const registerUserWithConfirmation = async () => {
-    const transaction = import.meta.env.VITE_TRANSACTION_FEE / 100;
-    const tax = transaction * bidAmount;
+
+const registerUserWithConfirmation = async () => {
+  try {
+    const transactionRate =
+      parseFloat(import.meta.env.VITE_TRANSACTION_FEE) / 100;
+    const tax = transactionRate * bidAmount;
     const total = tax + bidAmount;
+
     if (total > net) {
       toast.error("You don't have enough bid!");
       return;
-    } else {
-      await peopleStarter(room, profile, total);
-      await addSpendBid(profile, "Registration to an auction", total, "frozen");
     }
+
+    
+    await peopleStarter(room, profile, total);
+    await addSpendBid(profile, "Registration to an auction", total, "frozen");
+
+    
     const registrationData = {
       userId: profile.userId,
       roomId: roomid,
@@ -134,15 +140,17 @@ export const Register = ({
       date: new Date().toISOString(),
     };
 
-    try {
-      await registerUser(registrationData);
-      toast.success("User registered successfully!");
-      setIsRegistered(true);
-      setRegisteredUsers((prev) => [...prev, registrationData]);
-    } catch {
-      toast.error("Failed to register user.");
-    }
-  };
+    
+    await registerUser(registrationData);
+
+    toast.success("User registered successfully!");
+    setIsRegistered(true);
+    setRegisteredUsers((prev) => [...prev, registrationData]);
+  } catch {
+    toast.error("Failed to register user.");
+  }
+};
+
 
   const confirmRegistration = async () => {
     if (bid) {

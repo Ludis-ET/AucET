@@ -111,6 +111,7 @@ export const Detail = () => {
               ? room.newFormValues.starter
               : "people"
           }
+          room={room}
           bid={Number(room.newFormValues.bid)}
         />
         <p className="whitespace-pre-line p-4">

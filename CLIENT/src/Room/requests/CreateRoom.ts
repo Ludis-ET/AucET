@@ -81,7 +81,10 @@ export const peopleStarter = async (
       timestamp: new Date().toISOString(),
     };
 
-    await setDoc(doc(db, "Room-Starter"), dataToSave);
+    const docRef = doc(db, "Room-Starter", `${room.id}_${profile.userId}`);
+    await setDoc(docRef, dataToSave);
+
+    toast.success("Registration saved successfully!");
   } catch (error) {
     console.error("Error saving registration:", error);
     toast.error("Failed to save registration.");
