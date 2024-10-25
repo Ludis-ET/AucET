@@ -22,7 +22,12 @@ export const getRoom = async (profile: Profile): Promise<RoomType[] | null> => {
     const fireRoom = collection(db, "New-Rooms");
     const myRoom = query(fireRoom, where("creator", "==", profile.userId));
     const querySnapshot = await getDocs(myRoom);
-    const roomData = querySnapshot.docs.map((doc) => doc.data() as RoomType);
+
+    
+    const roomData = querySnapshot.docs.map((doc) => ({
+      id: doc.id, 
+      ...doc.data(),
+    })) as RoomType[];
 
     return roomData.length > 0 ? roomData : null;
   } catch (error) {

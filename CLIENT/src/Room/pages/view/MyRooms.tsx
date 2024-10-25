@@ -22,7 +22,7 @@ export const MyRooms = () => {
   }, [profile]);
 
   return (
-    <div className="col-span-2">
+    <div className="col-span-3">
       <div className="w-full flex flex-wrap gap-12 p-12">
         {loading || !room ? (
           <>
