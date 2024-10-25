@@ -7,3 +7,6 @@ export {
   deleteComment,
   likeComment,
 } from "./Comments";
+
+export { registerUser, fetchRegisteredUsers, unregisterUser } from "./Register";
+export type { UserRegistration } from "./Register";

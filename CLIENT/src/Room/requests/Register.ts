@@ -7,7 +7,7 @@ import {
   doc,
 } from "firebase/firestore";
 
-type UserRegistration = {
+export interface UserRegistration {
   userId: string;
   roomId: string;
   name: string;

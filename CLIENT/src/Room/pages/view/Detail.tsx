@@ -104,7 +104,7 @@ export const Detail = () => {
               })}
           </p>
         </h1>
-        <Register />
+        <Register roomid={room.id} />
         <p className="whitespace-pre-line p-4">
           {check(room.newFormValues.description) &&
             room.newFormValues.description}
