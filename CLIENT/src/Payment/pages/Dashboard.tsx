@@ -2,8 +2,13 @@ import { usePayment } from "../../Context";
 import { BuyBid, Transaction, Withdrawal } from ".";
 
 export const Dashboard = () => {
-  const { totalBoughtBids, totalSpentBids, totalFrozenBids, loading, net } =
-    usePayment();
+  const {
+    totalBoughtBids,
+    totalSpentBids,
+    totalFrozenBids,
+    loading,
+    net,
+  } = usePayment();
 
   return (
     <div className="bg-mainBackground h-screen w-full">
@@ -37,7 +42,7 @@ export const Dashboard = () => {
               <div className="px-4 py-5 sm:p-6">
                 <dl>
                   <dt className="text-sm leading-5 font-medium text-otherText truncate">
-                    Total spent Bids
+                    Spent Bids History
                   </dt>
                   <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText">
                     {totalSpentBids.toFixed(2)} BIDS
@@ -49,7 +54,7 @@ export const Dashboard = () => {
               <div className="px-4 py-5 sm:p-6">
                 <dl>
                   <dt className="text-sm leading-5 font-medium text-otherText truncate">
-                    Total Bought Bids
+                    Bought Bids History
                   </dt>
                   <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText">
                     {totalBoughtBids.toFixed(2)} BIDS
@@ -61,10 +66,10 @@ export const Dashboard = () => {
               <div className="px-4 py-5 sm:p-6">
                 <dl>
                   <dt className="text-sm leading-5 font-medium text-otherText truncate">
-                    Total Frozen Bids
+                    Frozen Bids History
                   </dt>
                   <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText">
-                    {totalFrozenBids.toFixed(2)} BIDS
+                    {(totalFrozenBids).toFixed(2)} BIDS
                   </dd>
                 </dl>
               </div>
@@ -73,7 +78,7 @@ export const Dashboard = () => {
               <div className="px-4 py-5 sm:p-6">
                 <dl>
                   <dt className="text-sm leading-5 font-medium text-otherText truncate">
-                    Net Bids
+                    Current Net Bids
                   </dt>
                   <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText">
                     {net.toFixed(2)} BIDS

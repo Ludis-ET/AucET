@@ -42,7 +42,7 @@ export const Transaction = () => {
     } else if (status === "withdrawn") {
       return "bg-red-700";
     }
-    return "bg-gray-500";
+    return "bg-blue-900";
   };
 
   return (
@@ -95,7 +95,11 @@ export const Transaction = () => {
                       {formatDate(transaction.createdAt)}
                     </p>
                     <p>{transaction.status}</p>
-                    {"reason" in transaction && <p className="text-buttonBackground font-bold">{transaction.reason}</p>}
+                    {"reason" in transaction && (
+                      <p className="text-buttonBackground font-bold">
+                        {transaction.reason}
+                      </p>
+                    )}
                   </span>
                   <p
                     className={`font-semibold rounded-full p-2 text-secondaryBackground ${getStatusColor(
@@ -104,6 +108,9 @@ export const Transaction = () => {
                   >
                     {"txRef" in transaction
                       ? "+ " + transaction.numberOfBids
+                      : "status" in transaction &&
+                        transaction.status === "refund"
+                      ? "+" + transaction.amount
                       : "- " + transaction.amount}
                   </p>
                 </div>

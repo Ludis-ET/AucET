@@ -33,6 +33,7 @@ interface PaymentState {
   totalSpentBids: number;
   totalBoughtBids: number;
   totalWithdrawnBids: number;
+  totalRefundBids: number;
   totalFrozenBids: number;
   net: number;
   spentBids: SpentBid[];
@@ -54,6 +55,7 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
     totalBoughtBids: 0,
     totalWithdrawnBids: 0,
     totalFrozenBids: 0,
+    totalRefundBids:0,
     net: 0,
     spentBids: [],
     buyBids: [],
@@ -132,6 +134,7 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
         totalBoughtBids,
         totalWithdrawnBids,
         totalFrozenBids,
+        totalRefundBids,
         net,
         spentBids: spentData,
         buyBids: buyData,

@@ -55,9 +55,8 @@ export const handleSubmit = async (
 
 export const addWithdrawnBid = async (
   profile: Profile,
-  amount: number,
   bids: number,
-  phoneNumber: string
+  phoneNumber: string,
 ) => {
   try {
     const withdrawnBidData = {
@@ -69,9 +68,6 @@ export const addWithdrawnBid = async (
     };
 
     await addDoc(collection(db, "Withdrawn-Bids"), withdrawnBidData);
-    toast.success(
-      `Withdrawn bid of ${amount} added for user ${profile.userId}.`
-    );
   } catch (error) {
     toast.error("Error adding withdrawn bid record.");
     console.error("Error adding withdrawn bid record: ", error);
@@ -94,7 +90,6 @@ export const addSpendBid = async (
     };
 
     await addDoc(collection(db, "Spend-Bids"), spendData);
-    toast.success("Spend bid successfully added.");
   } catch (error) {
     toast.error("Error adding spend record.");
     console.error("Error adding spend record: ", error);
@@ -118,7 +113,6 @@ export const updatePaymentStatus = async (txref: string) => {
           status: "completed",
         });
 
-        toast.success(`Payment status for ${txref} updated to completed.`);
       } else {
         toast.error(`No payment found with txref: ${txref}.`);
         console.error(`No payment found with txref: ${txref}`);

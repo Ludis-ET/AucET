@@ -18,7 +18,7 @@ const ConfirmationModal = ({
   onCancel: () => void;
   message: string;
 }) => (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
     <div className="bg-white p-5 rounded shadow-lg">
       <p>{message}</p>
       <div className="flex space-x-2">
