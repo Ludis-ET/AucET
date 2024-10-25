@@ -7,7 +7,7 @@ export const Withdrawal = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { netTotalBids } = usePayment();
+  const { net } = usePayment();
   const calc = import.meta.env.VITE_BID_AMOUNT;
   const { profile } = useAuth();
   const transactionFeePercentage = 0.1;
@@ -40,7 +40,7 @@ export const Withdrawal = () => {
       );
       return;
     }
-    if (bidAfterFee > netTotalBids) {
+    if (bidAfterFee > net) {
       setError("Insufficient funds.");
       return;
     }

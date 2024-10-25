@@ -90,7 +90,7 @@ export const addSpendBid = async (
       user: profile.userId,
       reason,
       bids: amount,
-      status: "frozen",
+      status: "spent",
       amount: amount * bidAmount,
       createdAt: new Date(),
     };

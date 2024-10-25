@@ -7,7 +7,7 @@ import {
   UserRegistration,
 } from "../../requests";
 import { toast } from "react-hot-toast";
-import { addSpendBid } from "../../../Payment/chapa";
+import { addFrozenBid } from "../../../Payment/chapa";
 
 const ConfirmationModal = ({
   onConfirm,
@@ -55,7 +55,7 @@ export const Register = ({
   const [isRegistered, setIsRegistered] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [bidAmount, setBidAmount] = useState(0);
-  const { netTotalBids } = usePayment();
+  const { net } = usePayment();
 
   useEffect(() => {
     const getRegisteredUsers = async () => {
@@ -116,11 +116,11 @@ export const Register = ({
       const transaction = import.meta.env.VITE_TRANSACTION_FEE / 100;
       const tax = transaction * bid;
       const total = tax + bid;
-      if (total > netTotalBids) {
+      if (total > net) {
         toast.error("you don't got enough bid!");
       } else {
         toast.success("Payment Success");
-        addSpendBid(profile, "Registration to an auction", total);
+        addFrozenBid(profile,total, "Registration to an auction");
         registerUserWithConfirmation();
       }
     }

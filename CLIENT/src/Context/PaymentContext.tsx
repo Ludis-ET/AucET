@@ -33,8 +33,16 @@ export interface WithdrawnBid {
 
 export interface RefundBid {
   user: string;
+  reason: string;
   amount: number;
-  bids: number;
+  status: string;
+  createdAt: Date;
+}
+
+export interface FrozenBids {
+  user: string;
+  reason: string;
+  amount: number;
   status: string;
   createdAt: Date;
 }
@@ -50,6 +58,7 @@ interface PaymentState {
   buyBids: BuyBid[];
   withdrawnBids: WithdrawnBid[];
   refundBids: RefundBid[];
+  frozenBids: FrozenBids[];
   loading: boolean;
 }
 
@@ -72,6 +81,7 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
     buyBids: [],
     withdrawnBids: [],
     refundBids: [],
+    frozenBids: [],
     loading: true,
   });
 
@@ -123,7 +133,7 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
       const frozenData = frozenSnapshot.docs.map((doc) => ({
         ...doc.data(),
         createdAt: doc.data().createdAt.toDate(),
-      })) as SpendBid[];
+      })) as FrozenBids[];
 
       const refundCollection = collection(db, "Refund-Bids");
       const refundQuery = query(
@@ -148,9 +158,12 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
         (total, bid) => total + bid.bids,
         0
       );
-      const totalFrozenBids = frozenData.length;
+      const totalFrozenBids = frozenData.reduce(
+        (total, bid) => total + bid.amount,
+        0
+      );
       const totalRefundBids = refundData.reduce(
-        (total, bid) => total + bid.bids,
+        (total, bid) => total + bid.amount,
         0
       );
       const net =
@@ -169,6 +182,7 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
         buyBids: buyData,
         withdrawnBids: withdrawnData,
         refundBids: refundData,
+        frozenBids: frozenData,
         loading: false,
       });
     };

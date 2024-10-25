@@ -5,19 +5,19 @@ import {
   usePayment,
   WithdrawnBid,
   RefundBid,
-} from "../../Context"; 
+  fro
+} from "../../Context";
 import { formatDistanceToNow } from "date-fns";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 export const Transaction = () => {
   const { buyBids, spendBids, loading, withdrawnBids, refundBids } =
-    usePayment(); 
+    usePayment();
 
   const sortByDate = (
     arr: Array<BuyBid | SpendBid | WithdrawnBid | RefundBid>
   ) => {
-    // Updated type
     return arr.sort((a, b) => {
       const dateA =
         a.createdAt instanceof Timestamp
@@ -40,11 +40,11 @@ export const Transaction = () => {
     ...buyBids,
     ...spendBids,
     ...withdrawnBids,
-    ...refundBids, // Include refund bids
+    ...refundBids,
   ]);
 
   const getStatusColor = (status: string) => {
-    if (status === "completed") {
+    if (status === "completed" || status === "refunded") {
       return "bg-green-700";
     } else if (status === "frozen") {
       return "bg-gray-400";
@@ -52,9 +52,6 @@ export const Transaction = () => {
       return "bg-yellow-600";
     } else if (status === "withdrawn") {
       return "bg-red-700";
-    } else if (status === "refunded") {
-      // Added refund status
-      return "bg-blue-500";
     }
     return "bg-gray-500";
   };
