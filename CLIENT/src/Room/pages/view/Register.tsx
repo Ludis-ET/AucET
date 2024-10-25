@@ -43,6 +43,8 @@ const BidModal = ({
           onChange={(e) => setAmount(e.target.value)}
           className="border mt-2 p-2 rounded w-full outline-none"
           placeholder="Bid amount"
+          min="1"
+          step="0.01"
         />
         <div className="flex space-x-2 mt-4">
           <button
@@ -111,7 +113,7 @@ export const Register = ({
       registerUserWithConfirmation();
     }
   };
-
+  console.log(bidAmount);
   const registerUserWithConfirmation = async () => {
     const transaction = import.meta.env.VITE_TRANSACTION_FEE / 100;
     const tax = transaction * bidAmount;

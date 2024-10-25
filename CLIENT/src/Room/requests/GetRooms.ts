@@ -60,3 +60,23 @@ export const getRoomById = async (id: string): Promise<RoomType | null> => {
     return null;
   }
 };
+
+export const getStarter = async (profile: Profile, room: RoomType) => {
+  try {
+    const AuctionRoom = collection(db, "Room-Starter");
+    const myRooms = query(AuctionRoom, where("userId", "==", profile.userId));
+    const starterQuery = query(myRooms, where("roomId", "==", room.id));
+
+    const snap = await getDocs(starterQuery);
+
+    if (!snap.empty) {
+      return snap.docs[0].data();
+    } else {
+      console.log("No matching starter document found.");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error retrieving starter document:", error);
+    return null;
+  }
+};
