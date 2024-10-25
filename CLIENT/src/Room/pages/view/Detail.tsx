@@ -4,6 +4,7 @@ import { Timestamp } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { CommentSection, CountDown, Property } from "../../components";
 import { RoomType, getRoomById } from "../../requests";
+import { Register } from "./Register";
 
 export const Detail = () => {
   const { id } = useParams();
@@ -103,6 +104,7 @@ export const Detail = () => {
               })}
           </p>
         </h1>
+        <Register />
         <p className="whitespace-pre-line p-4">
           {check(room.newFormValues.description) &&
             room.newFormValues.description}
