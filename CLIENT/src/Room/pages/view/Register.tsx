@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../../../Context";
+import { useAuth, usePayment } from "../../../Context";
 import {
   fetchRegisteredUsers,
   registerUser,
@@ -7,13 +7,55 @@ import {
   UserRegistration,
 } from "../../requests";
 import { toast } from "react-hot-toast";
+import { addSpendBid } from "../../../Payment/chapa";
 
-export const Register = ({ roomid }: { roomid: string }) => {
+const ConfirmationModal = ({
+  onConfirm,
+  onCancel,
+  message,
+}: {
+  onConfirm: () => void;
+  onCancel: () => void;
+  message: string;
+}) => (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="bg-white p-5 rounded shadow-lg">
+      <p>{message}</p>
+      <div className="flex space-x-2">
+        <button
+          onClick={onConfirm}
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+          Confirm
+        </button>
+        <button
+          onClick={onCancel}
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+export const Register = ({
+  roomid,
+  type,
+  bid,
+}: {
+  roomid: string;
+  type?: string;
+  bid?: number;
+}) => {
   const { profile } = useAuth();
   const [registeredUsers, setRegisteredUsers] = useState<UserRegistration[]>(
     []
   );
   const [isRegistered, setIsRegistered] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [bidAmount, setBidAmount] = useState(0);
+  const { netTotalBids } = usePayment();
 
   useEffect(() => {
     const getRegisteredUsers = async () => {
@@ -34,14 +76,28 @@ export const Register = ({ roomid }: { roomid: string }) => {
   }, [roomid, profile.userId]);
 
   const handleRegister = async () => {
+    if (type === "set") {
+      setShowModal(true);
+    } else if (type === "people") {
+      // Show input form for bid amount
+      const amount = prompt("Enter your bid amount:");
+      if (amount) {
+        setBidAmount(Number(amount));
+        // Add logic to handle the bid amount here
+      }
+    } else {
+      // Free registration
+      registerUserWithConfirmation();
+    }
+  };
+
+  const registerUserWithConfirmation = async () => {
     const registrationData = {
       userId: profile.userId,
       roomId: roomid,
       name: `${profile.firstName} ${profile.lastName}`,
       email: profile.email,
-      pic:
-        profile.photoURL ||
-        "https://imgs.search.brave.com/GIL_dabaOq4GAxTVyW2oN5sl6gbK1dpS4fspnJz7FJY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9hdmF0YXItcmVz/b3VyY2luZy1jb21w/YW55XzEyNTQ5Njct/NjY1My5qcGc_c2Vt/dD1haXNfaHlicmlk",
+      pic: profile.photoURL || "",
       date: new Date().toISOString(),
     };
 
@@ -53,6 +109,22 @@ export const Register = ({ roomid }: { roomid: string }) => {
     } catch {
       toast.error("Failed to register user.");
     }
+  };
+
+  const confirmRegistration = () => {
+    if (bid) {
+      const transaction = import.meta.env.VITE_TRANSACTION_FEE / 100;
+      const tax = transaction * bid;
+      const total = tax + bid;
+      if (total > netTotalBids) {
+        toast.error("you don't got enough bid!");
+      } else {
+        toast.success("Payment Success");
+        addSpendBid(profile, "Registration to an auction", total);
+        registerUserWithConfirmation();
+      }
+    }
+    setShowModal(false);
   };
 
   const handleUnregister = async (userId: string) => {
@@ -77,10 +149,7 @@ export const Register = ({ roomid }: { roomid: string }) => {
               <div key={user.userId} className="flex items-center">
                 <img
                   className="w-12 h-12 rounded-full border-2 border-white"
-                  src={
-                    user.pic ||
-                    "https://imgs.search.brave.com/GIL_dabaOq4GAxTVyW2oN5sl6gbK1dpS4fspnJz7FJY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9hdmF0YXItcmVz/b3VyY2luZy1jb21w/YW55XzEyNTQ5Njct/NjY1My5qcGc_c2Vt/dD1haXNfaHlicmlk"
-                  }
+                  src={user.pic || "https://via.placeholder.com/150"}
                   alt={user.name}
                 />
               </div>
@@ -98,10 +167,7 @@ export const Register = ({ roomid }: { roomid: string }) => {
             <div key={user.userId} className="flex items-center">
               <img
                 className="w-12 h-12 rounded-full border-2 border-white"
-                src={
-                  user.pic ||
-                  "https://imgs.search.brave.com/GIL_dabaOq4GAxTVyW2oN5sl6gbK1dpS4fspnJz7FJY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9hdmF0YXItcmVz/b3VyY2luZy1jb21w/YW55XzEyNTQ5Njct/NjY1My5qcGc_c2Vt/dD1haXNfaHlicmlk"
-                }
+                src={user.pic || "https://via.placeholder.com/150"}
                 alt={user.name}
               />
             </div>
@@ -136,6 +202,14 @@ export const Register = ({ roomid }: { roomid: string }) => {
           </button>
         )}
       </div>
+
+      {showModal && (
+        <ConfirmationModal
+          onConfirm={confirmRegistration}
+          onCancel={() => setShowModal(false)}
+          message={`Pay the bid amount of ${bid} to register?`}
+        />
+      )}
     </div>
   );
 };

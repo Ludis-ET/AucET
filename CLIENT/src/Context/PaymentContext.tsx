@@ -31,15 +31,25 @@ export interface WithdrawnBid {
   createdAt: Date;
 }
 
+export interface RefundBid {
+  user: string;
+  amount: number;
+  bids: number;
+  status: string;
+  createdAt: Date;
+}
+
 interface PaymentState {
-  totalSpent: number;
-  totalBought: number;
-  totalBoughtBids: number;
   totalSpentBids: number;
-  netTotalBids: number;
+  totalBoughtBids: number;
+  totalWithdrawnBids: number;
+  totalFrozenBids: number;
+  totalRefundBids: number;
+  net: number;
   spendBids: SpendBid[];
   buyBids: BuyBid[];
   withdrawnBids: WithdrawnBid[];
+  refundBids: RefundBid[];
   loading: boolean;
 }
 
@@ -52,14 +62,16 @@ interface PaymentProviderProps {
 export const PaymentProvider = ({ children }: PaymentProviderProps) => {
   const { profile } = useAuth();
   const [paymentState, setPaymentState] = useState<PaymentState>({
-    totalSpent: 0,
-    totalBought: 0,
-    totalBoughtBids: 0,
     totalSpentBids: 0,
-    netTotalBids: 0,
+    totalBoughtBids: 0,
+    totalWithdrawnBids: 0,
+    totalFrozenBids: 0,
+    totalRefundBids: 0,
+    net: 0,
     spendBids: [],
     buyBids: [],
     withdrawnBids: [],
+    refundBids: [],
     loading: true,
   });
 
@@ -80,15 +92,6 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
         createdAt: doc.data().createdAt.toDate(),
       })) as SpendBid[];
 
-      const totalSpent = spendData.reduce(
-        (total, bid) => total + bid.amount,
-        0
-      );
-      const totalSpentBids = spendData.reduce(
-        (total, bid) => total + bid.bids,
-        0
-      );
-
       const buyCollection = collection(db, "Buy-Bids");
       const buyQuery = query(
         buyCollection,
@@ -99,19 +102,6 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
         ...doc.data(),
         createdAt: doc.data().createdAt.toDate(),
       })) as BuyBid[];
-
-      const completedBuyBids = buyData.filter(
-        (bid) => bid.status === "completed"
-      );
-
-      const totalBought = completedBuyBids.reduce(
-        (total, bid) => total + bid.amount,
-        0
-      );
-      const totalBoughtBids = completedBuyBids.reduce(
-        (total, bid) => total + bid.numberOfBids,
-        0
-      );
 
       const withdrawnCollection = collection(db, "Withdrawn-Bids");
       const withdrawnQuery = query(
@@ -124,23 +114,61 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
         createdAt: doc.data().createdAt.toDate(),
       })) as WithdrawnBid[];
 
+      const frozenCollection = collection(db, "Frozen-Bids");
+      const frozenQuery = query(
+        frozenCollection,
+        where("user", "==", profile.userId)
+      );
+      const frozenSnapshot = await getDocs(frozenQuery);
+      const frozenData = frozenSnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        createdAt: doc.data().createdAt.toDate(),
+      })) as SpendBid[];
+
+      const refundCollection = collection(db, "Refund-Bids");
+      const refundQuery = query(
+        refundCollection,
+        where("user", "==", profile.userId)
+      );
+      const refundSnapshot = await getDocs(refundQuery);
+      const refundData = refundSnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        createdAt: doc.data().createdAt.toDate(),
+      })) as RefundBid[];
+
+      const totalSpentBids = spendData.reduce(
+        (total, bid) => total + bid.bids,
+        0
+      );
+      const totalBoughtBids = buyData.reduce(
+        (total, bid) => total + bid.numberOfBids,
+        0
+      );
       const totalWithdrawnBids = withdrawnData.reduce(
         (total, bid) => total + bid.bids,
         0
       );
-
-      const netTotalBids =
-        totalBoughtBids - (totalSpentBids + totalWithdrawnBids);
+      const totalFrozenBids = frozenData.length;
+      const totalRefundBids = refundData.reduce(
+        (total, bid) => total + bid.bids,
+        0
+      );
+      const net =
+        totalBoughtBids +
+        totalRefundBids -
+        (totalSpentBids + totalWithdrawnBids + totalFrozenBids);
 
       setPaymentState({
-        totalSpent,
-        totalBought,
-        totalBoughtBids,
         totalSpentBids,
-        netTotalBids,
+        totalBoughtBids,
+        totalWithdrawnBids,
+        totalFrozenBids,
+        totalRefundBids,
+        net,
         spendBids: spendData,
-        buyBids: completedBuyBids,
+        buyBids: buyData,
         withdrawnBids: withdrawnData,
+        refundBids: refundData,
         loading: false,
       });
     };

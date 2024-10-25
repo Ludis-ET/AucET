@@ -104,7 +104,15 @@ export const Detail = () => {
               })}
           </p>
         </h1>
-        <Register roomid={room.id} />
+        <Register
+          roomid={room.id}
+          type={
+            check(room.newFormValues.starter)
+              ? room.newFormValues.starter
+              : "people"
+          }
+          bid={Number(room.newFormValues.bid)}
+        />
         <p className="whitespace-pre-line p-4">
           {check(room.newFormValues.description) &&
             room.newFormValues.description}
