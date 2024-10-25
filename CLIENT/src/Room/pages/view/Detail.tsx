@@ -89,7 +89,11 @@ export const Detail = () => {
           {check(room.newFormValues.description) &&
             room.newFormValues.description}
         </p>
-        <CountDown />
+        <CountDown
+          time={
+            check(room.newFormValues.startdate) ? room.newFormValues.startdate : ""
+          }
+        />
       </div>
 
       {isModalOpen && (
