@@ -19,7 +19,8 @@ export const fetchComments = async () => {
     return {
       id: doc.id,
       user: data.user || "",
-      creatorId: data.creatorId || "", 
+      creatorId: data.creatorId || "",
+      roomId: data.roomId || "", 
       date: data.date || "",
       content: data.content || "",
       likes: data.likes || [],
@@ -30,7 +31,8 @@ export const fetchComments = async () => {
 
 export const addComment = async (commentData: {
   user: string;
-  creatorId: string; 
+  creatorId: string;
+  roomId: string; 
   content: string;
   date: string;
   likes: string[];

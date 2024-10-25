@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { BiHeart } from "react-icons/bi";
 import { FaUserCircle } from "react-icons/fa";
 import { RiSendPlaneFill } from "react-icons/ri";
+import toast, { LoaderIcon } from "react-hot-toast";
 import { useAuth } from "../../Context";
 import {
   fetchComments,
@@ -9,29 +10,33 @@ import {
   deleteComment,
   likeComment,
 } from "../requests";
-import toast from "react-hot-toast";
 
 type Comment = {
   id: string;
   user: string;
-  creatorId: string; // Added creatorId to store user ID
+  creatorId: string;
+  roomId: string;
   date: string;
   content: string;
   likes: string[];
 };
 
-export const CommentSection = () => {
+export const CommentSection = ({ roomid }: { roomid: string }) => {
   const { profile } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const loadComments = async () => {
       const fetchedComments = await fetchComments();
-      setComments(fetchedComments);
+      const filteredComments = fetchedComments.filter(
+        (comment) => comment.roomId === roomid
+      );
+      setComments(filteredComments);
     };
     loadComments();
-  }, []);
+  }, [roomid]);
 
   const handleLike = async (commentId: string) => {
     if (!profile?.userId) {
@@ -41,24 +46,38 @@ export const CommentSection = () => {
 
     await likeComment(commentId, profile.userId);
     const updatedComments = await fetchComments();
-    setComments(updatedComments);
+    const filteredComments = updatedComments.filter(
+      (comment) => comment.roomId === roomid
+    );
+    setComments(filteredComments);
   };
 
   const handleAddComment = async () => {
     if (newComment.trim()) {
       const commentData: Omit<Comment, "id"> = {
         user: `${profile.firstName} ${profile.lastName}`,
-        creatorId: profile.userId || "", // Store user ID as creatorId
+        creatorId: profile.userId || "",
+        roomId: roomid,
         date: new Date().toLocaleString(),
         content: newComment,
         likes: [],
       };
 
-      await addComment(commentData);
-      toast.success("Comment added successfully!");
-      const updatedComments = await fetchComments();
-      setComments(updatedComments);
-      setNewComment("");
+      setLoading(true);
+      try {
+        await addComment(commentData);
+        toast.success("Comment added successfully!");
+        const updatedComments = await fetchComments();
+        const filteredComments = updatedComments.filter(
+          (comment) => comment.roomId === roomid
+        );
+        setComments(filteredComments);
+        setNewComment("");
+      } catch {
+        toast.error("Failed to add comment. Please try again.");
+      } finally {
+        setLoading(false);
+      }
     } else {
       toast.error("Comment cannot be empty!");
     }
@@ -70,15 +89,34 @@ export const CommentSection = () => {
       return;
     }
 
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this comment?"
+    toast(
+      (t) => (
+        <div>
+          <p>Are you sure you want to delete this comment?</p>
+          <button
+            onClick={async () => {
+              await deleteComment(commentId);
+              toast.success("Comment deleted successfully!");
+              const updatedComments = await fetchComments();
+              const filteredComments = updatedComments.filter(
+                (comment) => comment.roomId === roomid
+              );
+              setComments(filteredComments);
+              toast.dismiss(t.id);
+            }}
+            className="mr-2 text-red-500"
+          >
+            Yes
+          </button>
+          <button onClick={() => toast.dismiss(t.id)} className="text-gray-500">
+            No
+          </button>
+        </div>
+      ),
+      {
+        duration: Infinity,
+      }
     );
-    if (confirmDelete) {
-      await deleteComment(commentId);
-      toast.success("Comment deleted successfully!");
-      const updatedComments = await fetchComments();
-      setComments(updatedComments);
-    }
   };
 
   return (
@@ -92,9 +130,9 @@ export const CommentSection = () => {
 
       {comments.map((comment) => (
         <div key={comment.id} className="grid grid-cols-[35px_1fr] gap-5 p-5">
-          <div className="w-9 h-full bg-gray-100 rounded-lg grid">
+          <div className="w-9 bg-gray-100 rounded-lg flex flex-col gap-1 items-center justify-center">
             <button
-              className={`relative flex items-center justify-center w-9 h-9 bg-transparent rounded-full ${
+              className={`relative flex items-center justify-center w-9 h-9 text-xl bg-transparent rounded-full ${
                 comment.likes.includes(profile?.userId) ? "text-red-500" : ""
               }`}
               onClick={() => handleLike(comment.id)}
@@ -102,7 +140,7 @@ export const CommentSection = () => {
               <BiHeart />
             </button>
             <hr className="w-2/3 mx-auto" />
-            <span className="text-gray-600 text-center text-sm">
+            <span className="text-gray-600 text-center text-xl">
               {comment.likes.length}
             </span>
           </div>
@@ -119,8 +157,8 @@ export const CommentSection = () => {
                 <p className="text-xs text-gray-500">{comment.date}</p>
               </div>
             </div>
-            <p className="text-gray-700 text-sm">{comment.content}</p>
-            {comment.creatorId === profile?.userId && ( // Check if user is the creator
+            <p className="text-gray-700 text-sm p-2">{comment.content}</p>
+            {comment.creatorId === profile?.userId && (
               <button
                 onClick={() =>
                   handleDeleteComment(comment.id, comment.creatorId)
@@ -137,7 +175,7 @@ export const CommentSection = () => {
       <div className="px-5 pt-2">
         <textarea
           className="w-full p-2 bg-gray-100 rounded-md text-sm outline-none"
-          placeholder="Reply"
+          placeholder="Post a comment"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
         ></textarea>
@@ -146,8 +184,9 @@ export const CommentSection = () => {
             type="button"
             onClick={handleAddComment}
             className="flex items-center justify-center w-8 h-8 bg-buttonBackground text-white rounded-full"
+            disabled={loading}
           >
-            <RiSendPlaneFill />
+            {loading ? <LoaderIcon /> : <RiSendPlaneFill />}
           </button>
         </div>
       </div>
