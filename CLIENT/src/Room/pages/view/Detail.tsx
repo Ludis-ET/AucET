@@ -83,7 +83,15 @@ export const Detail = () => {
           ))}
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-buttonBackground">{check(room.newFormValues.name) && room.newFormValues.name}</h1>
+          <h1 className="text-2xl font-bold text-buttonBackground">
+            {check(room.newFormValues.name) && room.newFormValues.name}
+          </h1>
+        </div>
+        <div className="p-4">
+          <p className="whitespace-pre-line">
+            {check(room.newFormValues.description) &&
+              room.newFormValues.description}
+          </p>
         </div>
       </div>
 
