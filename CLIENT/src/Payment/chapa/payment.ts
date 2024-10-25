@@ -62,8 +62,7 @@ export const addWithdrawnBid = async (
   try {
     const withdrawnBidData = {
       user: profile.userId,
-      amount,
-      bids,
+      amount: bids,
       phoneNumber,
       status: "withdrawn",
       createdAt: new Date(),
@@ -82,16 +81,15 @@ export const addWithdrawnBid = async (
 export const addSpendBid = async (
   profile: Profile,
   reason: string,
-  amount: number
+  amount: number,
+  status: string,
 ) => {
-  const bidAmount = Number(import.meta.env.VITE_BID_AMOUNT) || 100;
   try {
     const spendData = {
       user: profile.userId,
       reason,
-      bids: amount,
-      status: "spent",
-      amount: amount * bidAmount,
+      status: status,
+      amount: amount,
       createdAt: new Date(),
     };
 
@@ -100,50 +98,6 @@ export const addSpendBid = async (
   } catch (error) {
     toast.error("Error adding spend record.");
     console.error("Error adding spend record: ", error);
-  }
-};
-
-
-export const addFrozenBid = async (
-  profile: Profile,
-  amount: number,
-  reason: string
-) => {
-  try {
-    const frozenBidData = {
-      user: profile.userId,
-      reason,
-      amount,
-      status: "frozen",
-      createdAt: new Date(),
-    };
-
-    await addDoc(collection(db, "Frozen-Bids"), frozenBidData);
-    toast.success("Frozen bid successfully added.");
-  } catch (error) {
-    toast.error("Error adding frozen bid record.");
-    console.error("Error adding frozen bid record: ", error);
-  }
-};
-
-
-export const addRefundBid = async (
-  profile: Profile,
-  amount: number,
-) => {
-  try {
-    const refundData = {
-      user: profile.userId,
-      amount,
-      status: "refunded",
-      createdAt: new Date(),
-    };
-
-    await addDoc(collection(db, "Refund-Bids"), refundData);
-    toast.success(`Refund of ${amount} added.`);
-  } catch (error) {
-    toast.error("Error adding refund record.");
-    console.error("Error adding refund record: ", error);
   }
 };
 

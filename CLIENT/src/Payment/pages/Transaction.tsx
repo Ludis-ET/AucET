@@ -1,23 +1,13 @@
 import { Timestamp } from "firebase/firestore";
-import {
-  BuyBid,
-  SpendBid,
-  usePayment,
-  WithdrawnBid,
-  RefundBid,
-  fro
-} from "../../Context";
+import { BuyBid, SpentBid, usePayment, WithdrawnBid } from "../../Context";
 import { formatDistanceToNow } from "date-fns";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 export const Transaction = () => {
-  const { buyBids, spendBids, loading, withdrawnBids, refundBids } =
-    usePayment();
-
-  const sortByDate = (
-    arr: Array<BuyBid | SpendBid | WithdrawnBid | RefundBid>
-  ) => {
+  const { buyBids, spentBids, loading, withdrawnBids } = usePayment();
+  const BidToETB = import.meta.env.VITE_BID_AMOUNT;
+  const sortByDate = (arr: Array<BuyBid | SpentBid | WithdrawnBid>) => {
     return arr.sort((a, b) => {
       const dateA =
         a.createdAt instanceof Timestamp
@@ -38,9 +28,8 @@ export const Transaction = () => {
 
   const sortedTransactions = sortByDate([
     ...buyBids,
-    ...spendBids,
+    ...spentBids,
     ...withdrawnBids,
-    ...refundBids,
   ]);
 
   const getStatusColor = (status: string) => {
@@ -98,12 +87,15 @@ export const Transaction = () => {
                 <div className="flex justify-between items-center gap-12">
                   <span>
                     <p className="text-otherText font-semibold">
-                      {transaction.amount} ETB
+                      {transaction.amount *
+                        ("txRef" in transaction ? 1 : BidToETB)}{" "}
+                      ETB
                     </p>
                     <p className="text-gray-500 font-semibold">
                       {formatDate(transaction.createdAt)}
                     </p>
                     <p>{transaction.status}</p>
+                    {"reason" in transaction && <p className="text-buttonBackground font-bold">{transaction.reason}</p>}
                   </span>
                   <p
                     className={`font-semibold rounded-full p-2 text-secondaryBackground ${getStatusColor(
@@ -112,7 +104,7 @@ export const Transaction = () => {
                   >
                     {"txRef" in transaction
                       ? "+ " + transaction.numberOfBids
-                      : "- " + transaction.bids}
+                      : "- " + transaction.amount}
                   </p>
                 </div>
               </div>

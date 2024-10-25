@@ -2,7 +2,7 @@ import { usePayment } from "../../Context";
 import { BuyBid, Transaction, Withdrawal } from ".";
 
 export const Dashboard = () => {
-  const { totalBoughtBids, totalSpentBids, loading, net } =
+  const { totalBoughtBids, totalSpentBids, totalFrozenBids, loading, net } =
     usePayment();
 
   return (
@@ -45,7 +45,6 @@ export const Dashboard = () => {
                 </dl>
               </div>
             </div>
-            {/* Repeat for other data blocks */}
             <div className="bg-secondaryBackground overflow-hidden shadow sm:rounded-lg">
               <div className="px-4 py-5 sm:p-6">
                 <dl>
@@ -65,7 +64,7 @@ export const Dashboard = () => {
                     Total Frozen Bids
                   </dt>
                   <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText">
-                    0 BIDS
+                    {totalFrozenBids.toFixed(2)} BIDS
                   </dd>
                 </dl>
               </div>

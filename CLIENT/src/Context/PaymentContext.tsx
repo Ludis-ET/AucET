@@ -3,12 +3,11 @@ import { db } from "../firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useAuth } from ".";
 
-export interface SpendBid {
+export interface SpentBid {
   user: string;
-  reason: string;
   amount: number;
-  status: string;
-  bids: number;
+  reason?: string;
+  status: "spent" | "refund" | "frozen";
   createdAt: Date;
 }
 
@@ -26,23 +25,6 @@ export interface BuyBid {
 export interface WithdrawnBid {
   user: string;
   amount: number;
-  bids: number;
-  status: string;
-  createdAt: Date;
-}
-
-export interface RefundBid {
-  user: string;
-  reason: string;
-  amount: number;
-  status: string;
-  createdAt: Date;
-}
-
-export interface FrozenBids {
-  user: string;
-  reason: string;
-  amount: number;
   status: string;
   createdAt: Date;
 }
@@ -52,13 +34,10 @@ interface PaymentState {
   totalBoughtBids: number;
   totalWithdrawnBids: number;
   totalFrozenBids: number;
-  totalRefundBids: number;
   net: number;
-  spendBids: SpendBid[];
+  spentBids: SpentBid[];
   buyBids: BuyBid[];
   withdrawnBids: WithdrawnBid[];
-  refundBids: RefundBid[];
-  frozenBids: FrozenBids[];
   loading: boolean;
 }
 
@@ -75,13 +54,10 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
     totalBoughtBids: 0,
     totalWithdrawnBids: 0,
     totalFrozenBids: 0,
-    totalRefundBids: 0,
     net: 0,
-    spendBids: [],
+    spentBids: [],
     buyBids: [],
     withdrawnBids: [],
-    refundBids: [],
-    frozenBids: [],
     loading: true,
   });
 
@@ -91,16 +67,16 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
 
       setPaymentState((prevState) => ({ ...prevState, loading: true }));
 
-      const spendCollection = collection(db, "Spend-Bids");
-      const spendQuery = query(
-        spendCollection,
+      const spentCollection = collection(db, "Spend-Bids");
+      const spentQuery = query(
+        spentCollection,
         where("user", "==", profile.userId)
       );
-      const spendSnapshot = await getDocs(spendQuery);
-      const spendData = spendSnapshot.docs.map((doc) => ({
+      const spentSnapshot = await getDocs(spentQuery);
+      const spentData = spentSnapshot.docs.map((doc) => ({
         ...doc.data(),
         createdAt: doc.data().createdAt.toDate(),
-      })) as SpendBid[];
+      })) as SpentBid[];
 
       const buyCollection = collection(db, "Buy-Bids");
       const buyQuery = query(
@@ -124,48 +100,28 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
         createdAt: doc.data().createdAt.toDate(),
       })) as WithdrawnBid[];
 
-      const frozenCollection = collection(db, "Frozen-Bids");
-      const frozenQuery = query(
-        frozenCollection,
-        where("user", "==", profile.userId)
-      );
-      const frozenSnapshot = await getDocs(frozenQuery);
-      const frozenData = frozenSnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        createdAt: doc.data().createdAt.toDate(),
-      })) as FrozenBids[];
+      const totalSpentBids = spentData
+        .filter((spent) => spent.status === "spent")
+        .reduce((total, bid) => total + bid.amount, 0);
 
-      const refundCollection = collection(db, "Refund-Bids");
-      const refundQuery = query(
-        refundCollection,
-        where("user", "==", profile.userId)
-      );
-      const refundSnapshot = await getDocs(refundQuery);
-      const refundData = refundSnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        createdAt: doc.data().createdAt.toDate(),
-      })) as RefundBid[];
-
-      const totalSpentBids = spendData.reduce(
-        (total, bid) => total + bid.bids,
-        0
-      );
       const totalBoughtBids = buyData.reduce(
         (total, bid) => total + bid.numberOfBids,
         0
       );
+
       const totalWithdrawnBids = withdrawnData.reduce(
-        (total, bid) => total + bid.bids,
-        0
-      );
-      const totalFrozenBids = frozenData.reduce(
         (total, bid) => total + bid.amount,
         0
       );
-      const totalRefundBids = refundData.reduce(
-        (total, bid) => total + bid.amount,
-        0
-      );
+
+      const totalFrozenBids = spentData
+        .filter((bid) => bid.status === "frozen")
+        .reduce((total, bid) => total + bid.amount, 0);
+
+      const totalRefundBids = spentData
+        .filter((bid) => bid.status === "refund")
+        .reduce((total, bid) => total + bid.amount, 0);
+
       const net =
         totalBoughtBids +
         totalRefundBids -
@@ -176,13 +132,10 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
         totalBoughtBids,
         totalWithdrawnBids,
         totalFrozenBids,
-        totalRefundBids,
         net,
-        spendBids: spendData,
+        spentBids: spentData,
         buyBids: buyData,
         withdrawnBids: withdrawnData,
-        refundBids: refundData,
-        frozenBids: frozenData,
         loading: false,
       });
     };

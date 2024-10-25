@@ -7,7 +7,7 @@ import {
   UserRegistration,
 } from "../../requests";
 import { toast } from "react-hot-toast";
-import { addFrozenBid } from "../../../Payment/chapa";
+import { addSpendBid } from "../../../Payment/chapa";
 
 const ConfirmationModal = ({
   onConfirm,
@@ -111,7 +111,7 @@ export const Register = ({
     }
   };
 
-  const confirmRegistration = () => {
+  const confirmRegistration = async () => {
     if (bid) {
       const transaction = import.meta.env.VITE_TRANSACTION_FEE / 100;
       const tax = transaction * bid;
@@ -119,8 +119,13 @@ export const Register = ({
       if (total > net) {
         toast.error("you don't got enough bid!");
       } else {
+        await addSpendBid(
+          profile,
+          "Registration to an auction",
+          total,
+          "frozen"
+        );
         toast.success("Payment Success");
-        addFrozenBid(profile,total, "Registration to an auction");
         registerUserWithConfirmation();
       }
     }
@@ -130,6 +135,9 @@ export const Register = ({
   const handleUnregister = async (userId: string) => {
     try {
       await unregisterUser(userId, roomid);
+      if (bid) {
+        await addSpendBid(profile, "Unregistering Room", bid, "refund");
+      }
       toast.success("User unregistered successfully!");
       setRegisteredUsers((prev) =>
         prev.filter((user) => user.userId !== userId)
