@@ -51,7 +51,8 @@ export const uploadData = async (
     };
 
     await setDoc(docRef, dataToSave);
-    await addSpendBid(profile, "Room Creation", 2);
+    if (newFormValues.roomtype === "large")
+      await addSpendBid(profile, "Room Creation", 2);
     toast.success("Data uploaded successfully!");
     return documentId;
   } catch (error) {

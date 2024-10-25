@@ -19,7 +19,7 @@ export const Step5 = ({ form }: Props) => {
     1: ["Buy/Sell", "Visibility", "starter"],
     2: ["startdate", "duration", "bid"],
     3: ["description","name"],
-    4: ["type"],
+    4: ["roomtype"],
   };
   const newFormValues: { [key: string]: string } = {};
   const { profile } = useAuth();
