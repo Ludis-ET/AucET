@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Timestamp } from "firebase/firestore";
+import { formatDistanceToNow } from "date-fns";
 import { CountDown } from "../../components";
 import { RoomType, getRoomById } from "../../requests";
 
@@ -53,7 +54,15 @@ export const Detail = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div className="col-span-4 md:col-span-3 w-full flex flex-col gap-4 items-center justify-center">
+        <div className="loader"></div>
+        <h1 className="text-2xl font-bold text-buttonBackground">
+          Finding Auction Room
+        </h1>
+      </div>
+    );
   const check = (val: string | Timestamp) => typeof val === "string";
   return (
     <div className="col-span-4 md:col-span-3">
@@ -82,8 +91,16 @@ export const Detail = () => {
             </div>
           ))}
         </div>
-        <h1 className="text-2xl font-bold text-buttonBackground">
+        <h1 className="text-2xl font-bold text-buttonBackground flex gap-3 flex-wrap items-center">
           {check(room.newFormValues.name) && room.newFormValues.name}
+
+          <p className="text-gray-600 text-sm flex gap-2 items-center">
+            <p>.</p>
+            {!check(room.createdAt) &&
+              formatDistanceToNow((room.createdAt as Timestamp).toDate(), {
+                addSuffix: true,
+              })}
+          </p>
         </h1>
         <p className="whitespace-pre-line p-4">
           {check(room.newFormValues.description) &&
@@ -91,9 +108,19 @@ export const Detail = () => {
         </p>
         <CountDown
           time={
-            check(room.newFormValues.startdate) ? room.newFormValues.startdate : ""
+            check(room.newFormValues.startdate)
+              ? room.newFormValues.startdate
+              : ""
           }
         />
+        <div>
+          <div className="notification">
+            <div className="notiglow"></div>
+            <div className="notiborderglow"></div>
+            <div className="notititle">Welcome To Uiverse</div>
+            <div className="notibody">Contribute to Open Source UI Elements</div>
+          </div>
+        </div>
       </div>
 
       {isModalOpen && (
