@@ -64,17 +64,12 @@ export const uploadData = async (
   }
 };
 
-export const peopleStarter = async ({
-  room,
-  profile,
-  bid,
-}: {
-  room: RoomType;
-  profile: Profile;
-  bid: number;
-}) => {
+export const peopleStarter = async (
+  room: RoomType,
+  profile: Profile,
+  bid: number
+) => {
   try {
-    
     const dataToSave = {
       userId: profile.userId,
       roomId: room.id,
@@ -86,10 +81,7 @@ export const peopleStarter = async ({
       timestamp: new Date().toISOString(),
     };
 
-    await setDoc(
-      doc(db, "Room-Starter"),
-      dataToSave
-    );
+    await setDoc(doc(db, "Room-Starter"), dataToSave);
   } catch (error) {
     console.error("Error saving registration:", error);
     toast.error("Failed to save registration.");

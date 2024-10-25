@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useAuth, usePayment } from "../../../Context";
 import {
   fetchRegisteredUsers,
+  peopleStarter,
   registerUser,
+  RoomType,
   unregisterUser,
   UserRegistration,
 } from "../../requests";
@@ -63,10 +65,12 @@ const BidModal = ({
 
 export const Register = ({
   roomid,
+  room,
   type,
   bid,
 }: {
   roomid: string;
+  room: RoomType;
   type?: string;
   bid?: number;
 }) => {
@@ -109,6 +113,16 @@ export const Register = ({
   };
 
   const registerUserWithConfirmation = async () => {
+    const transaction = import.meta.env.VITE_TRANSACTION_FEE / 100;
+    const tax = transaction * bidAmount;
+    const total = tax + bidAmount;
+    if (total > net) {
+      toast.error("You don't have enough bid!");
+      return;
+    } else {
+      await peopleStarter(room, profile, total);
+      await addSpendBid(profile, "Registration to an auction", total, "frozen");
+    }
     const registrationData = {
       userId: profile.userId,
       roomId: roomid,
@@ -117,7 +131,7 @@ export const Register = ({
       pic: profile.photoURL || "",
       date: new Date().toISOString(),
     };
-            
+
     try {
       await registerUser(registrationData);
       toast.success("User registered successfully!");
