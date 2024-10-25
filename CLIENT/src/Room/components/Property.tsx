@@ -6,7 +6,7 @@ export const Property = ({
   content: string;
 }) => {
   return (
-    <div className="relative flex flex-col w-full h-32 bg-mainBackground rounded-xl overflow-hidden font-sans text-sm">
+    <div className="relative flex flex-col w-full pb-4 bg-mainBackground rounded-xl overflow-hidden font-sans text-sm">
       <div className="absolute inset-px bg-secondaryBackground rounded-[0.9375rem] z-20"></div>
 
       <div className="absolute left-2 inset-y-4 w-1 bg-gradient-to-b from-buttonHover via-buttonBackground to-mainText rounded-sm transform transition-transform duration-300 ease-linear hover:translate-x-1 z-30"></div>

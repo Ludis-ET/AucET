@@ -16,7 +16,7 @@ export const Step5 = ({ form }: Props) => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const names: { [key: string]: string[] } = {
-    1: ["Buy/Sell", "Visibility", "starter"],
+    1: ["BuySell", "Visibility", "starter"],
     2: ["startdate", "duration", "bid"],
     3: ["description","name"],
     4: ["roomtype"],

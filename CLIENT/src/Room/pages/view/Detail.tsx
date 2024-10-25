@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Timestamp } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
-import { CountDown } from "../../components";
+import { CountDown, Property } from "../../components";
 import { RoomType, getRoomById } from "../../requests";
 
 export const Detail = () => {
@@ -63,6 +63,7 @@ export const Detail = () => {
         </h1>
       </div>
     );
+
   const check = (val: string | Timestamp) => typeof val === "string";
   return (
     <div className="col-span-4 md:col-span-3">
@@ -114,7 +115,34 @@ export const Detail = () => {
           }
         />
         <div className="ml-12 max-w-[40vw] flex flex-col gap-4">
-          
+          <Property
+            title="Auction type"
+            content={
+              check(room.newFormValues.BuySell)
+                ? room.newFormValues.BuySell === "sell"
+                  ? "Get in to this auction if you want to buy the item"
+                  : "Get in to this auction if you want to sell to the creator"
+                : ""
+            }
+          />
+          <Property
+            title="Auction Visibility"
+            content={
+              check(room.newFormValues.Visibility)
+                ? room.newFormValues.Visibility === "closed"
+                  ? "You can't see the bids of other people"
+                  : "You can see the bids of other people"
+                : ""
+            }
+          />
+          <Property
+            title="Auction Duration"
+            content={
+              check(room.newFormValues.duration)
+                ? `${room.newFormValues.duration} Hours`
+                : ""
+            }
+          />
         </div>
       </div>
 
@@ -124,21 +152,21 @@ export const Detail = () => {
             className="absolute top-4 right-4 text-white text-2xl"
             onClick={closeModal}
           >
-            &times; {/* Close button */}
+            &times;
           </button>
           <button
             className="absolute left-4 text-white text-2xl"
             onClick={prevImage}
             disabled={currentIndex === 0}
           >
-            &#10094; {/* Left arrow */}
+            &#10094;
           </button>
           <button
             className="absolute right-4 text-white text-2xl"
             onClick={nextImage}
             disabled={currentIndex === room.images.length - 1}
           >
-            &#10095; {/* Right arrow */}
+            &#10095;
           </button>
           <img
             src={room.images[currentIndex]}
