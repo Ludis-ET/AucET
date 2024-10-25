@@ -39,7 +39,7 @@ const BidModal = ({
           type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="border mt-2 p-2 rounded w-full"
+          className="border mt-2 p-2 rounded w-full outline-none"
           placeholder="Bid amount"
         />
         <div className="flex space-x-2 mt-4">
@@ -117,7 +117,7 @@ export const Register = ({
       pic: profile.photoURL || "",
       date: new Date().toISOString(),
     };
-
+            
     try {
       await registerUser(registrationData);
       toast.success("User registered successfully!");

@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-hot-toast";
 import { addSpendBid } from "../../Payment/chapa";
 import { Profile } from "../../Context";
+import { RoomType } from "./GetRooms";
+import { db } from "../../firebase";
 
 const uploadFileToFirebase = async (file: File, folder: string) => {
   try {
@@ -59,5 +61,37 @@ export const uploadData = async (
     console.error("Error uploading data to Firestore:", error);
     toast.error("Error uploading data.");
     throw error;
+  }
+};
+
+export const peopleStarter = async ({
+  room,
+  profile,
+  bid,
+}: {
+  room: RoomType;
+  profile: Profile;
+  bid: number;
+}) => {
+  try {
+    
+    const dataToSave = {
+      userId: profile.userId,
+      roomId: room.id,
+      bidAmount: bid,
+      name: `${profile.firstName} ${profile.lastName}`,
+      email: profile.email,
+      phoneNumber: profile.phoneNumber,
+      photoURL: profile.photoURL || "",
+      timestamp: new Date().toISOString(),
+    };
+
+    await setDoc(
+      doc(db, "Room-Starter"),
+      dataToSave
+    );
+  } catch (error) {
+    console.error("Error saving registration:", error);
+    toast.error("Failed to save registration.");
   }
 };
