@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { RoomCard } from "../../components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { getRoom, RoomType } from "../../requests";
+import { getRoomByProfile, RoomType } from "../../requests";
 import { useAuth } from "../../../Context";
 
 export const MyRooms = () => {
@@ -13,7 +13,7 @@ export const MyRooms = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       setLoading(true);
-      const response = await getRoom(profile);
+      const response = await getRoomByProfile(profile);
       console.log(response)
       setRoom(response);
       setLoading(false);
