@@ -113,13 +113,8 @@ export const Detail = () => {
               : ""
           }
         />
-        <div>
-          <div className="notification">
-            <div className="notiglow"></div>
-            <div className="notiborderglow"></div>
-            <div className="notititle">Welcome To Uiverse</div>
-            <div className="notibody">Contribute to Open Source UI Elements</div>
-          </div>
+        <div className="ml-12 max-w-[40vw] flex flex-col gap-4">
+          
         </div>
       </div>
 
