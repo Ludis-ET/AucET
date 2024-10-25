@@ -8,36 +8,58 @@ import {
 } from "../../requests";
 import { toast } from "react-hot-toast";
 import { addSpendBid } from "../../../Payment/chapa";
+import { ConfirmationModal } from "../../components";
 
-const ConfirmationModal = ({
+const BidModal = ({
   onConfirm,
   onCancel,
-  message,
+  setBidAmount,
 }: {
   onConfirm: () => void;
   onCancel: () => void;
-  message: string;
-}) => (
-  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white p-5 rounded shadow-lg">
-      <p>{message}</p>
-      <div className="flex space-x-2">
-        <button
-          onClick={onConfirm}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-        >
-          Confirm
-        </button>
-        <button
-          onClick={onCancel}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-        >
-          Cancel
-        </button>
+  setBidAmount: (amount: number) => void;
+}) => {
+  const [amount, setAmount] = useState("");
+
+  const handleConfirm = () => {
+    const numericAmount = Number(amount);
+    if (!isNaN(numericAmount) && numericAmount > 0) {
+      setBidAmount(numericAmount);
+      onConfirm();
+    } else {
+      toast.error("Please enter a valid amount.");
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-5 rounded shadow-lg">
+        <p>Enter your bid amount:</p>
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          className="border mt-2 p-2 rounded w-full"
+          placeholder="Bid amount"
+        />
+        <div className="flex space-x-2 mt-4">
+          <button
+            onClick={handleConfirm}
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          >
+            Confirm
+          </button>
+          <button
+            onClick={onCancel}
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export const Register = ({
   roomid,
@@ -54,6 +76,7 @@ export const Register = ({
   );
   const [isRegistered, setIsRegistered] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showBidModal, setShowBidModal] = useState(false);
   const [bidAmount, setBidAmount] = useState(0);
   const { net } = usePayment();
 
@@ -79,14 +102,8 @@ export const Register = ({
     if (type === "set") {
       setShowModal(true);
     } else if (type === "people") {
-      // Show input form for bid amount
-      const amount = prompt("Enter your bid amount:");
-      if (amount) {
-        setBidAmount(Number(amount));
-        // Add logic to handle the bid amount here
-      }
+      setShowBidModal(true);
     } else {
-      // Free registration
       registerUserWithConfirmation();
     }
   };
@@ -117,7 +134,7 @@ export const Register = ({
       const tax = transaction * bid;
       const total = tax + bid;
       if (total > net) {
-        toast.error("you don't got enough bid!");
+        toast.error("You don't have enough bid!");
       } else {
         await addSpendBid(
           profile,
@@ -216,6 +233,17 @@ export const Register = ({
           onConfirm={confirmRegistration}
           onCancel={() => setShowModal(false)}
           message={`Pay the bid amount of ${bid} to register?`}
+        />
+      )}
+
+      {showBidModal && (
+        <BidModal
+          onConfirm={() => {
+            setShowBidModal(false);
+            registerUserWithConfirmation();
+          }}
+          onCancel={() => setShowBidModal(false)}
+          setBidAmount={setBidAmount}
         />
       )}
     </div>
