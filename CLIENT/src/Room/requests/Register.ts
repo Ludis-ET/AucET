@@ -12,6 +12,7 @@ type UserRegistration = {
   roomId: string;
   name: string;
   email: string;
+  pic: string;
   date: string;
 };
 
@@ -29,6 +30,7 @@ export const fetchRegisteredUsers = async () => {
       roomId: data.roomId || "",
       name: data.name || "",
       email: data.email || "",
+      pic: data.pic || "",
       date: data.date || "",
     };
   });
