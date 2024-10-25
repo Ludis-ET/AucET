@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Timestamp } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
-import { CountDown, Property } from "../../components";
+import { CommentSection, CountDown, Property } from "../../components";
 import { RoomType, getRoomById } from "../../requests";
 
 export const Detail = () => {
@@ -145,7 +145,7 @@ export const Detail = () => {
           />
         </div>
       </div>
-
+    <CommentSection />
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50">
           <button
