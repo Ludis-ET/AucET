@@ -3,4 +3,6 @@ export {
   updatePaymentStatus,
   addSpendBid,
   addWithdrawnBid,
+  addFrozenBid,
+  addRefundBid,
 } from "./payment";

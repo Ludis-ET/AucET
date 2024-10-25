@@ -1,13 +1,23 @@
 import { Timestamp } from "firebase/firestore";
-import { BuyBid, SpendBid, usePayment, WithdrawnBid } from "../../Context";
+import {
+  BuyBid,
+  SpendBid,
+  usePayment,
+  WithdrawnBid,
+  RefundBid,
+} from "../../Context"; 
 import { formatDistanceToNow } from "date-fns";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 export const Transaction = () => {
-  const { buyBids, spendBids, loading, withdrawnBids } = usePayment();
+  const { buyBids, spendBids, loading, withdrawnBids, refundBids } =
+    usePayment(); 
 
-  const sortByDate = (arr: Array<BuyBid | SpendBid | WithdrawnBid>) => {
+  const sortByDate = (
+    arr: Array<BuyBid | SpendBid | WithdrawnBid | RefundBid>
+  ) => {
+    // Updated type
     return arr.sort((a, b) => {
       const dateA =
         a.createdAt instanceof Timestamp
@@ -30,7 +40,9 @@ export const Transaction = () => {
     ...buyBids,
     ...spendBids,
     ...withdrawnBids,
+    ...refundBids, // Include refund bids
   ]);
+
   const getStatusColor = (status: string) => {
     if (status === "completed") {
       return "bg-green-700";
@@ -40,9 +52,13 @@ export const Transaction = () => {
       return "bg-yellow-600";
     } else if (status === "withdrawn") {
       return "bg-red-700";
+    } else if (status === "refunded") {
+      // Added refund status
+      return "bg-blue-500";
     }
     return "bg-gray-500";
   };
+
   return (
     <div className="bg-secondaryBackground p-8 rounded-lg max-w-[90vw] min-w-[30vw] shadow-lg">
       <header className="flex justify-between items-center gap-20 border-b-2 pb-4">

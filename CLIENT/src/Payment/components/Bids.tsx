@@ -3,7 +3,7 @@ import { usePayment } from "../../Context";
 
 export const Bids = () => {
   const {
-    netTotalBids,
+    net,
     loading: paymentLoading,
   } = usePayment();
   return (
@@ -11,7 +11,7 @@ export const Bids = () => {
       {paymentLoading ? (
         <LoaderIcon />
       ) : (
-        (netTotalBids).toFixed(2)
+        (net).toFixed(2)
       )}{" "}
       <span className="font-normal">BIDS</span>
     </span>

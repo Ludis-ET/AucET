@@ -2,7 +2,7 @@ import { usePayment } from "../../Context";
 import { BuyBid, Transaction, Withdrawal } from ".";
 
 export const Dashboard = () => {
-  const { totalBoughtBids, totalSpentBids, loading, netTotalBids } =
+  const { totalBoughtBids, totalSpentBids, loading, net } =
     usePayment();
 
   return (
@@ -77,7 +77,7 @@ export const Dashboard = () => {
                     Net Bids
                   </dt>
                   <dd className="mt-1 text-3xl leading-9 font-semibold text-mainText">
-                    {netTotalBids.toFixed(2)} BIDS
+                    {net.toFixed(2)} BIDS
                   </dd>
                 </dl>
               </div>

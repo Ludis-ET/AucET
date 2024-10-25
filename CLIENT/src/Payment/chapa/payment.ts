@@ -103,6 +103,50 @@ export const addSpendBid = async (
   }
 };
 
+
+export const addFrozenBid = async (
+  profile: Profile,
+  amount: number,
+  reason: string
+) => {
+  try {
+    const frozenBidData = {
+      user: profile.userId,
+      reason,
+      amount,
+      status: "frozen",
+      createdAt: new Date(),
+    };
+
+    await addDoc(collection(db, "Frozen-Bids"), frozenBidData);
+    toast.success("Frozen bid successfully added.");
+  } catch (error) {
+    toast.error("Error adding frozen bid record.");
+    console.error("Error adding frozen bid record: ", error);
+  }
+};
+
+
+export const addRefundBid = async (
+  profile: Profile,
+  amount: number,
+) => {
+  try {
+    const refundData = {
+      user: profile.userId,
+      amount,
+      status: "refunded",
+      createdAt: new Date(),
+    };
+
+    await addDoc(collection(db, "Refund-Bids"), refundData);
+    toast.success(`Refund of ${amount} added.`);
+  } catch (error) {
+    toast.error("Error adding refund record.");
+    console.error("Error adding refund record: ", error);
+  }
+};
+
 export const updatePaymentStatus = async (txref: string) => {
   try {
     if (txref) {
