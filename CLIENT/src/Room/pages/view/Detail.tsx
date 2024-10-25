@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { RoomType } from "../../requests";
-import { getRoomById } from "../../requests/GetRooms";
 import { Timestamp } from "firebase/firestore";
+import { CountDown } from "../../components";
+import { RoomType, getRoomById } from "../../requests";
 
 export const Detail = () => {
   const { id } = useParams();
@@ -57,7 +57,7 @@ export const Detail = () => {
   const check = (val: string | Timestamp) => typeof val === "string";
   return (
     <div className="col-span-4 md:col-span-3">
-      <div className="grid gap-4">
+      <div className="grid gap-4 p-8">
         <div>
           {mainMedia && (
             <video
@@ -82,17 +82,14 @@ export const Detail = () => {
             </div>
           ))}
         </div>
-        <div>
-          <h1 className="text-2xl font-bold text-buttonBackground">
-            {check(room.newFormValues.name) && room.newFormValues.name}
-          </h1>
-        </div>
-        <div className="p-4">
-          <p className="whitespace-pre-line">
-            {check(room.newFormValues.description) &&
-              room.newFormValues.description}
-          </p>
-        </div>
+        <h1 className="text-2xl font-bold text-buttonBackground">
+          {check(room.newFormValues.name) && room.newFormValues.name}
+        </h1>
+        <p className="whitespace-pre-line p-4">
+          {check(room.newFormValues.description) &&
+            room.newFormValues.description}
+        </p>
+        <CountDown />
       </div>
 
       {isModalOpen && (
