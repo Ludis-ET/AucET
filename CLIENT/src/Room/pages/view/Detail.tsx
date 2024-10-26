@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Timestamp } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
-import { CommentSection, CountDown, Property } from "../../components";
+import { CommentSection, CountDown, Loader, Property } from "../../components";
 import { RoomType, getRoomById } from "../../requests";
 import { Register } from "./Register";
 
@@ -33,14 +33,7 @@ export const Detail = () => {
   }, [id]);
 
   if (loading || !room)
-    return (
-      <div className="col-span-4 md:col-span-3 w-full flex flex-col gap-4 items-center justify-center">
-        <div className="loader"></div>
-        <h1 className="text-2xl font-bold text-buttonBackground">
-          Finding Auction Room
-        </h1>
-      </div>
-    );
+    return <Loader text="Fetching room details..." />;
   const openModal = (index: number) => {
     setCurrentIndex(index);
     setIsModalOpen(true);
