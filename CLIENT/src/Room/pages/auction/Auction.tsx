@@ -25,8 +25,8 @@ export const Auction = () => {
 
   return (
     <div className="bg-mainBackground min-h-screen p-8 flex justify-center gap-4 items-center">
-      <Chat room={room} />
-      <Chat room={room} />
+      <Chat room={room} starter={10} />
+      <Chat room={room} starter={10} />
     </div>
   );
 };
