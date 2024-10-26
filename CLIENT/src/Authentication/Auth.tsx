@@ -1,4 +1,4 @@
-import { Login, PhoneNumberVerification } from "./pages";
+import { Login, PhoneNumberVerification, NameSetup } from "./pages";
 import { useAuth } from "../Context";
 
 const Auth = () => {
@@ -9,6 +9,8 @@ const Auth = () => {
     return <Login />;
   } else if (!profile.phoneVerified) {
     return <PhoneNumberVerification />;
+  } else if (!profile.firstName.length || !profile.lastName.length) {
+    return <NameSetup />;
   } else {
     return <div>Logged in</div>;
   }

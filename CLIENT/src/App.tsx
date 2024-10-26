@@ -13,7 +13,7 @@ const App = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        {currentUser && profile ? (
+        {currentUser && profile && profile.phoneVerified && profile.lastName.length ? (
           <>
             <Route path="/rooms/*" element={<Room />} />
             <Route path="/payments/*" element={<Payment />} />
