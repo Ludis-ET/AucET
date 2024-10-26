@@ -14,7 +14,7 @@ export const MyRooms = () => {
     const fetchRooms = async () => {
       setLoading(true);
       const response = await getRoomByProfile(profile);
-      console.log(response)
+      console.log(response);
       setRoom(response);
       setLoading(false);
     };
@@ -25,11 +25,20 @@ export const MyRooms = () => {
     <div className="col-span-3">
       <div className="w-full flex flex-wrap gap-12 p-12">
         {loading || !room ? (
-          <>
-            {[1, 2, 4, 5, 6, 7, 8, 9, 0, 11, 22, 23, 24, 25].map((k) => (
-              <RoomCardSkeleton key={k} />
-            ))}
-          </>
+          loading ? (
+            <>
+              {[1, 2, 4, 5, 6, 7, 8, 9, 0, 11, 22, 23, 24, 25].map((k) => (
+                <RoomCardSkeleton key={k} />
+              ))}
+            </>
+          ) : (
+            <div className="text-center w-full">
+              <h1 className="text-2xl font-bold">No Rooms Found</h1>
+              <p className="text-gray-500">
+                You have not created any rooms yet
+              </p>
+            </div>
+          )
         ) : (
           <>
             {room.map((r) => (
