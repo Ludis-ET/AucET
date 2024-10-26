@@ -32,8 +32,15 @@ export const Detail = () => {
     fetchRoom();
   }, [id]);
 
-  if (!room) return <div>No room found.</div>;
-
+  if (loading || !room)
+    return (
+      <div className="col-span-4 md:col-span-3 w-full flex flex-col gap-4 items-center justify-center">
+        <div className="loader"></div>
+        <h1 className="text-2xl font-bold text-buttonBackground">
+          Finding Auction Room
+        </h1>
+      </div>
+    );
   const openModal = (index: number) => {
     setCurrentIndex(index);
     setIsModalOpen(true);
@@ -55,15 +62,6 @@ export const Detail = () => {
     }
   };
 
-  if (loading)
-    return (
-      <div className="col-span-4 md:col-span-3 w-full flex flex-col gap-4 items-center justify-center">
-        <div className="loader"></div>
-        <h1 className="text-2xl font-bold text-buttonBackground">
-          Finding Auction Room
-        </h1>
-      </div>
-    );
 
   const check = (val: string | Timestamp) => typeof val === "string";
   return (

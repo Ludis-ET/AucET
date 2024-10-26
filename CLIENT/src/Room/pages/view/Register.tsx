@@ -11,59 +11,7 @@ import {
 import { toast } from "react-hot-toast";
 import { addSpendBid } from "../../../Payment/chapa";
 import { ConfirmationModal } from "../../components";
-
-const BidModal = ({
-  onConfirm,
-  onCancel,
-  setBidAmount,
-}: {
-  onConfirm: () => void;
-  onCancel: () => void;
-  setBidAmount: (amount: number) => void;
-}) => {
-  const [amount, setAmount] = useState("");
-
-  const handleConfirm = () => {
-    const numericAmount = Number(amount);
-    if (!isNaN(numericAmount) && numericAmount > 0) {
-      setBidAmount(numericAmount);
-      onConfirm();
-    } else {
-      toast.error("Please enter a valid amount.");
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-5 rounded shadow-lg">
-        <p>Enter your bid amount:</p>
-        <input
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="border mt-2 p-2 rounded w-full outline-none"
-          placeholder="Bid amount"
-          min="1"
-          step="0.01"
-        />
-        <div className="flex space-x-2 mt-4">
-          <button
-            onClick={handleConfirm}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-          >
-            Confirm
-          </button>
-          <button
-            onClick={onCancel}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+import { getStarter } from "../../requests/GetRooms";
 
 export const Register = ({
   roomid,
@@ -92,19 +40,17 @@ export const Register = ({
         const users = await fetchRegisteredUsers();
         const filteredUsers = users.filter((user) => user.roomId === roomid);
         setRegisteredUsers(filteredUsers);
-        const userExists = filteredUsers.some(
-          (user) => user.userId === profile.userId
+        setIsRegistered(
+          filteredUsers.some((user) => user.userId === profile.userId)
         );
-        setIsRegistered(userExists);
       } catch {
         toast.error("Failed to fetch registered users.");
       }
     };
-
     getRegisteredUsers();
   }, [roomid, profile.userId]);
 
-  const handleRegister = async () => {
+  const handleRegister = () => {
     if (type === "set") {
       setShowModal(true);
     } else if (type === "people") {
@@ -114,43 +60,38 @@ export const Register = ({
     }
   };
 
-const registerUserWithConfirmation = async () => {
-  try {
-    const transactionRate =
-      parseFloat(import.meta.env.VITE_TRANSACTION_FEE) / 100;
-    const tax = transactionRate * bidAmount;
-    const total = tax + bidAmount;
+  const registerUserWithConfirmation = async () => {
+    try {
+      const transactionRate =
+        parseFloat(import.meta.env.VITE_TRANSACTION_FEE) / 100;
+      const tax = transactionRate * bidAmount;
+      const total = tax + bidAmount;
 
-    if (total > net) {
-      toast.error("You don't have enough bid!");
-      return;
+      if (total > net || total <= 0) {
+        toast.error("You don't have enough bid!");
+        return;
+      }
+
+      await peopleStarter(room, profile, bidAmount);
+      await addSpendBid(profile, "Registration to an auction", total, "frozen");
+
+      const registrationData = {
+        userId: profile.userId,
+        roomId: roomid,
+        name: `${profile.firstName} ${profile.lastName}`,
+        email: profile.email,
+        pic: profile.photoURL || "",
+        date: new Date().toISOString(),
+      };
+
+      await registerUser(registrationData);
+      toast.success("User registered successfully!");
+      setIsRegistered(true);
+      setRegisteredUsers((prev) => [...prev, registrationData]);
+    } catch {
+      toast.error("Failed to register user.");
     }
-
-    
-    await peopleStarter(room, profile, total);
-    await addSpendBid(profile, "Registration to an auction", total, "frozen");
-
-    
-    const registrationData = {
-      userId: profile.userId,
-      roomId: roomid,
-      name: `${profile.firstName} ${profile.lastName}`,
-      email: profile.email,
-      pic: profile.photoURL || "",
-      date: new Date().toISOString(),
-    };
-
-    
-    await registerUser(registrationData);
-
-    toast.success("User registered successfully!");
-    setIsRegistered(true);
-    setRegisteredUsers((prev) => [...prev, registrationData]);
-  } catch {
-    toast.error("Failed to register user.");
-  }
-};
-
+  };
 
   const confirmRegistration = async () => {
     if (bid) {
@@ -176,7 +117,13 @@ const registerUserWithConfirmation = async () => {
   const handleUnregister = async (userId: string) => {
     try {
       await unregisterUser(userId, roomid);
-      if (bid) {
+      if (type === "people") {
+       const starter = await getStarter(profile, room);
+       if (starter){
+          await addSpendBid(profile, "Unregistering Room", starter.bidAmount, "refund");
+       }
+      }
+      else if (bid) {
         await addSpendBid(profile, "Unregistering Room", bid, "refund");
       }
       toast.success("User unregistered successfully!");
@@ -189,41 +136,26 @@ const registerUserWithConfirmation = async () => {
     }
   };
 
-  const renderRegisteredUsers = () => {
-    if (registeredUsers.length > 5) {
-      return (
-        <>
-          <div className="flex -space-x-4 items-center mb-4">
-            {registeredUsers.slice(0, 5).map((user) => (
-              <div key={user.userId} className="flex items-center">
-                <img
-                  className="w-12 h-12 rounded-full border-2 border-white"
-                  src={user.pic || "https://via.placeholder.com/150"}
-                  alt={user.name}
-                />
-              </div>
-            ))}
-          </div>
-          <div className="text-gray-700">
-            +{registeredUsers.length - 5} more
-          </div>
-        </>
-      );
-    } else {
-      return (
-        <div className="flex -space-x-4 items-center mb-4">
-          {registeredUsers.map((user) => (
-            <div key={user.userId} className="flex items-center">
-              <img
-                className="w-12 h-12 rounded-full border-2 border-white"
-                src={user.pic || "https://via.placeholder.com/150"}
-                alt={user.name}
-              />
-            </div>
-          ))}
+  const renderRegisteredUsers = () => (
+    <div className="flex -space-x-4 items-center mb-4">
+      {registeredUsers.slice(0, 5).map((user) => (
+        <div key={user.userId} className="flex items-center">
+          <img
+            className="w-12 h-12 rounded-full border-2 border-white"
+            src={user.pic || "https://via.placeholder.com/150"}
+            alt={user.name}
+          />
         </div>
-      );
-    }
+      ))}
+      {registeredUsers.length > 5 && (
+        <div className="text-gray-700">+{registeredUsers.length - 5} more</div>
+      )}
+    </div>
+  );
+
+  const handleBidConfirm = () => {
+    setShowBidModal(false);
+    registerUserWithConfirmation();
   };
 
   return (
@@ -261,14 +193,34 @@ const registerUserWithConfirmation = async () => {
       )}
 
       {showBidModal && (
-        <BidModal
-          onConfirm={() => {
-            setShowBidModal(false);
-            registerUserWithConfirmation();
-          }}
-          onCancel={() => setShowBidModal(false)}
-          setBidAmount={setBidAmount}
-        />
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-5 rounded shadow-lg">
+            <p>Enter your bid amount:</p>
+            <input
+              type="number"
+              value={bidAmount}
+              onChange={(e) => setBidAmount(Number(e.target.value))}
+              className="border mt-2 p-2 rounded w-full outline-none"
+              placeholder="Bid amount"
+              min="1"
+              step="0.01"
+            />
+            <div className="flex space-x-2 mt-4">
+              <button
+                onClick={handleBidConfirm}
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+              >
+                Confirm
+              </button>
+              <button
+                onClick={() => setShowBidModal(false)}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
