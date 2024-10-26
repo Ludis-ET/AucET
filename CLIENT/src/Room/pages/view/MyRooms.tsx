@@ -51,7 +51,7 @@ export const MyRooms = () => {
   );
 };
 
-const RoomCardSkeleton = () => {
+export const RoomCardSkeleton = () => {
   return (
     <div className="w-72 h-96 p-4 bg-white shadow-md rounded-lg flex flex-col gap-4">
       <Skeleton height={150} />

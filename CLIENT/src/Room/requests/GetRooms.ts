@@ -39,6 +39,23 @@ export const getRoomByProfile = async (
   }
 };
 
+export const getRooms = async (): Promise<RoomType[] | null> => {
+  try {
+    const fireRoom = collection(db, "New-Rooms");
+    const querySnapshot = await getDocs(fireRoom);
+
+    const roomData = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as RoomType[];
+
+    return roomData.length > 0 ? roomData : null;
+  } catch (error) {
+    console.error("Error fetching room:", error);
+    return null;
+  }
+};
+
 export const getRoomById = async (id: string): Promise<RoomType | null> => {
   try {
     const roomRef = doc(db, "New-Rooms", id);

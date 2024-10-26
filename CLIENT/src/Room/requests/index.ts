@@ -1,5 +1,5 @@
 export { uploadData, peopleStarter } from "./CreateRoom";
-export { getRoomByProfile, getRoomById } from "./GetRooms";
+export { getRoomByProfile, getRoomById, getRooms } from "./GetRooms";
 export type { RoomType } from "./GetRooms";
 export {
   fetchComments,
