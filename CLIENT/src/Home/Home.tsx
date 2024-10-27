@@ -1,12 +1,9 @@
-// import { signOut } from "../Authentication/firebase/GoogleAuth";
-// import { useAuth } from "../Context";
+import { Header } from "./components";
 
 const Home = () => {
-  // const { setCurrentUser } = useAuth();
   return (
-    <div>
-      {/* <button onClick={signOut(setCurrentUser)}>signout</button> */}
-      Home
+    <div className="bg-mainBackground min-h-screen overflow-y-scroll p-8">
+      <Header />
     </div>
   );
 };
