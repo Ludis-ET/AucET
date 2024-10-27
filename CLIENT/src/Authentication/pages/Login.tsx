@@ -24,7 +24,7 @@ export const Login = () => {
     <div className="bg-mainBackground flex justify-center items-center h-screen">
       <div className="w-1/2 h-screen hidden lg:block">
         <img
-          src="https://imgs.search.brave.com/cJ8Sv_AvFN4U4Fe1q72njil-6NPRNdtGN_zijlQLtng/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTAw/NTIxNjUzMi9waG90/by9vbmxpbmUtYXVj/dGlvbi1jb25jZXB0/LndlYnA_Yj0xJnM9/NjEyeDYxMiZ3PTAm/az0yMCZjPW9KWl9R/SmNCNjBQQ0FjcnJo/Qk5zT2tWNmxiZnVK/RHRWYVhfdGZoRUpi/SFE9"
+          src="https://images.pexels.com/photos/5668473/pexels-photo-5668473.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
           alt="Placeholder"
           className="object-cover w-full h-full"
         />

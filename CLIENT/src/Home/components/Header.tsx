@@ -1,7 +1,11 @@
 import { useState } from "react";
+import { useAuth } from "../../Context";
+import { signOut } from "../../Authentication/firebase/GoogleAuth";
+import { Link } from "react-router-dom";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const { currentUser, profile, setCurrentUser } = useAuth();
 
   const handleToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -89,14 +93,54 @@ export const Header = () => {
         )}
 
         <div className="flex items-center ml-auto space-x-6">
-          <button className="font-semibold text-[15px] border-none outline-none">
-            <a href="#" className="text-buttonBackground hover:underline">
-              Login
-            </a>
-          </button>
-          <button className="px-4 py-2 text-sm rounded-sm font-bold text-white border-2 border-buttonBackground bg-buttonBackground transition-all ease-in-out duration-300 hover:bg-transparent hover:text-buttonBackground">
-            Sign up
-          </button>
+          {!currentUser ||
+          !profile ||
+          !profile.phoneVerified ||
+          !profile.lastName.length ? (
+            <>
+              <button className="font-semibold text-[15px] border-none outline-none">
+                <Link
+                  to="/auth"
+                  className="text-buttonBackground hover:underline"
+                >
+                  Login
+                </Link>
+              </button>
+              <Link
+                to="/auth"
+                className="px-4 py-2 text-sm rounded-sm font-bold text-white border-2 border-buttonBackground bg-buttonBackground transition-all ease-in-out duration-300 hover:bg-transparent hover:text-buttonBackground"
+              >
+                Sign up
+              </Link>
+            </>
+          ) : (
+            <div className="flex items-center space-x-4">
+              <button className="font-semibold text-[15px] border-none outline-none flex gap-1 items-center">
+                <img
+                  src={
+                    profile.photoURL.length
+                      ? profile.photoURL
+                      : "https://imgs.search.brave.com/GIL_dabaOq4GAxTVyW2oN5sl6gbK1dpS4fspnJz7FJY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9hdmF0YXItcmVz/b3VyY2luZy1jb21w/YW55XzEyNTQ5Njct/NjY1My5qcGc_c2Vt/dD1haXNfaHlicmlk"
+                  }
+                  alt=""
+                  className="w-10 h-10 rounded-full"
+                />
+                <a
+                  href={`/room`}
+                  target="_blank"
+                  className="text-buttonBackground hover:underline"
+                >
+                  {profile.firstName}
+                </a>
+              </button>
+              <button
+                onClick={() => signOut(setCurrentUser)}
+                className="px-4 py-2 text-sm rounded-sm font-bold text-white border-2 border-buttonBackground bg-buttonBackground transition-all ease-in-out duration-300 hover:bg-transparent hover:text-buttonBackground"
+              >
+                Logout
+              </button>
+            </div>
+          )}
 
           <button
             id="toggleOpen"

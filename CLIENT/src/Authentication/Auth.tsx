@@ -1,5 +1,6 @@
 import { Login, PhoneNumberVerification, NameSetup } from "./pages";
 import { useAuth } from "../Context";
+import { Navigate } from "react-router-dom";
 
 const Auth = () => {
   const { loading, currentUser, profile } = useAuth();
@@ -12,7 +13,7 @@ const Auth = () => {
   } else if (!profile.firstName.length || !profile.lastName.length) {
     return <NameSetup />;
   } else {
-    return <div>Logged in</div>;
+    return <Navigate to="/" />;
   }
 };
 
