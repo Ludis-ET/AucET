@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { Dashboard } from "./pages";
 import { Callback } from "./pages/CallBack";
 
-function App() {
+function Payment() {
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
@@ -11,4 +11,4 @@ function App() {
   );
 }
 
-export default App;
+export default Payment;

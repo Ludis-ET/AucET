@@ -57,28 +57,28 @@ export const Header = () => {
                 </a>
               </li>
               <li className="max-lg:border-b max-lg:py-3 px-3">
-                <a
-                  href="#"
+                <Link
+                  to="/"
                   className="hover:text-buttonBackground text-buttonBackground block font-semibold text-[15px]"
                 >
                   Home
-                </a>
+                </Link>
               </li>
               <li className="max-lg:border-b max-lg:py-3 px-3">
-                <a
-                  href="#"
+                <Link
+                  to="/payments"
                   className="hover:text-buttonBackground text-[#333] block font-semibold text-[15px]"
                 >
-                  Team
-                </a>
+                  Payments
+                </Link>
               </li>
               <li className="max-lg:border-b max-lg:py-3 px-3">
-                <a
-                  href="#"
+                <Link
+                  to='/rooms/my'
                   className="hover:text-buttonBackground text-[#333] block font-semibold text-[15px]"
                 >
-                  Feature
-                </a>
+                  My Rooms
+                </Link>
               </li>
               <li className="max-lg:border-b max-lg:py-3 px-3">
                 <a

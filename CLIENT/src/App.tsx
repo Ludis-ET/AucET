@@ -10,7 +10,7 @@ const App = () => {
     <Suspense fallback={<Loader text="Loading..." />}>
       <Routes>
         <Route path="/auth" element={<Auth />} />
-        <Route path="*" element={<Home />} />
+        <Route path="/*" element={<Home />} />
       </Routes>
     </Suspense>
   );

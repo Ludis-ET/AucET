@@ -39,7 +39,7 @@ export const RoomCard = ({ room }: { room: RoomType }) => {
       />
       <div className="p-6">
         <Link
-          to={`/rooms/view/${room.id}`}
+          to={`/view/${room.id}`}
           className="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-brown-gray-900 hover:text-buttonBackground antialiased"
         >
           {typeof room.newFormValues.name === "string"
