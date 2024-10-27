@@ -3,3 +3,4 @@ export { View } from "./view/View";
 export { RoomDetail } from "./view/RoomDetail";
 export { Auction } from "./auction/Auction";
 export { AllRooms } from "./view/AllRooms";
+export { Redirector } from "./auction/Redirector";
