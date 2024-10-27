@@ -51,7 +51,7 @@ export const Register = ({
       const tax = transactionRate * bidAmount;
       const total = tax + bidAmount;
 
-      if (total > net || total <= 0) {
+      if (total > net || total < 0) {
         toast.error("You don't have enough bid!");
         return;
       }

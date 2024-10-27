@@ -67,7 +67,7 @@ export const AllRooms = () => {
 
       <div className="grid grid-cols-4 gap-4 relative">
         <div className="col-span-3">
-          <div className="w-full flex flex-wrap gap-12 p-12">
+          <div className="w-full flex flex-wrap gap-12 py-12">
             {loading ? (
               <>
                 {[...Array(12)].map((_, k) => (

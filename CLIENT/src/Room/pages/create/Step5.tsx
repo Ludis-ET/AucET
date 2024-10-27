@@ -93,7 +93,7 @@ export const Step5 = ({ form }: Props) => {
       );
       toast.success(`Data uploaded successfully! Document ID: ${documentId}`);
 
-      navigate("/rooms");
+      navigate("/");
     } catch (error) {
       console.error("Error during submission:", error);
     } finally {
