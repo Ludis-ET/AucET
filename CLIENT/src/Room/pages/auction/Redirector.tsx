@@ -41,13 +41,9 @@ export const Redirector = () => {
         </header>
         <main className="m-9">
           <Property
-            title="Auction type"
+            title="Item Name"
             content={
-              check(room.newFormValues.BuySell)
-                ? room.newFormValues.BuySell === "sell"
-                  ? "Get in to this auction if you want to buy the item"
-                  : "Get in to this auction if you want to sell to the creator"
-                : ""
+              check(room.newFormValues.name) ? room.newFormValues.name : ""
             }
           />
           <Property
@@ -69,6 +65,7 @@ export const Redirector = () => {
             }
           />
         </main>
+        <footer></footer>
       </div>
     </div>
   );
