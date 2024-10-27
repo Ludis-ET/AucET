@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { RoomType } from "../requests";
+import { roomTransfer, RoomType } from "../requests";
 import Countdown from "react-countdown";
 import { useFetchRegisters } from "../hook/useFetchRegisters";
 import { useAuth } from "../../Context";
-import { FaPen, FaUser } from "react-icons/fa6";
+import { FaPowerOff, FaUser } from "react-icons/fa6";
 import { isLoggedin } from "../../Authentication/isLoggedin";
 
 export const RoomCard = ({ room }: { room: RoomType }) => {
@@ -49,9 +49,12 @@ export const RoomCard = ({ room }: { room: RoomType }) => {
         </Link>
         {isLoggedin(currentUser, profile) &&
           room.creator === profile.userId && (
-            <Link className="w-full flex justify-end items-center relative">
-              <FaPen className="m-2 text-buttonBackground absolute" />
-            </Link>
+            <button
+              onClick={() => roomTransfer(room.id, "New-Rooms", "Closed-Rooms")}
+              className="w-full flex justify-end items-center relative"
+            >
+              <FaPowerOff className="m-2 text-buttonBackground absolute" />
+            </button>
           )}
         <p className="block font-sans text-base font-light leading-relaxed text-inherit antialiased">
           {typeof room.newFormValues.description === "string" &&

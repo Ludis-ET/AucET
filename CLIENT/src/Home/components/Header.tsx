@@ -96,6 +96,18 @@ export const Header = () => {
                       My Rooms
                     </NavLink>
                   </li>
+                  <li className="max-lg:border-b max-lg:py-3 px-3">
+                    <NavLink
+                      to="/create"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "text-buttonBackground block font-semibold text-[15px]"
+                          : "hover:text-buttonBackground text-[#333] block font-semibold text-[15px]"
+                      }
+                    >
+                      Create Room
+                    </NavLink>
+                  </li>
                 </>
               )}
             </ul>
