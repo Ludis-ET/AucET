@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../Context";
 import { signOut } from "../../Authentication/firebase/GoogleAuth";
 import { Link } from "react-router-dom";
+import { isLoggedin } from "../../Authentication/isLoggedin";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
@@ -74,7 +75,7 @@ export const Header = () => {
               </li>
               <li className="max-lg:border-b max-lg:py-3 px-3">
                 <Link
-                  to='/rooms/my'
+                  to="/rooms/my"
                   className="hover:text-buttonBackground text-[#333] block font-semibold text-[15px]"
                 >
                   My Rooms
@@ -93,10 +94,7 @@ export const Header = () => {
         )}
 
         <div className="flex items-center ml-auto space-x-6">
-          {!currentUser ||
-          !profile ||
-          !profile.phoneVerified ||
-          !profile.lastName.length ? (
+          {!isLoggedin(currentUser, profile) ? (
             <>
               <button className="font-semibold text-[15px] border-none outline-none">
                 <Link
