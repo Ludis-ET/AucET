@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth, usePayment } from "../../../Context";
 import {
-  fetchRegisteredUsers,
   peopleStarter,
   registerUser,
   RoomType,
   unregisterUser,
-  UserRegistration,
 } from "../../requests";
 import { toast } from "react-hot-toast";
 import { addSpendBid } from "../../../Payment/chapa";
 import { ConfirmationModal } from "../../components";
 import { getStarter } from "../../requests/GetRooms";
+import { useFetchRegisters } from "../../hook/useFetchRegisters";
 
 export const Register = ({
   roomid,
@@ -25,30 +24,12 @@ export const Register = ({
   bid?: number;
 }) => {
   const { profile } = useAuth();
-  const [registeredUsers, setRegisteredUsers] = useState<UserRegistration[]>(
-    []
-  );
-  const [isRegistered, setIsRegistered] = useState(false);
+  const { isRegistered, registeredUsers, setRegisteredUsers, setIsRegistered } =
+    useFetchRegisters(roomid, profile);
   const [showModal, setShowModal] = useState(false);
   const [showBidModal, setShowBidModal] = useState(false);
   const [bidAmount, setBidAmount] = useState(0);
   const { net } = usePayment();
-
-  useEffect(() => {
-    const getRegisteredUsers = async () => {
-      try {
-        const users = await fetchRegisteredUsers();
-        const filteredUsers = users.filter((user) => user.roomId === roomid);
-        setRegisteredUsers(filteredUsers);
-        setIsRegistered(
-          filteredUsers.some((user) => user.userId === profile.userId)
-        );
-      } catch {
-        toast.error("Failed to fetch registered users.");
-      }
-    };
-    getRegisteredUsers();
-  }, [roomid, profile.userId]);
 
   const handleRegister = () => {
     if (type === "set") {
@@ -118,12 +99,16 @@ export const Register = ({
     try {
       await unregisterUser(userId, roomid);
       if (type === "people") {
-       const starter = await getStarter(profile, room);
-       if (starter){
-          await addSpendBid(profile, "Unregistering Room", starter.bidAmount, "refund");
-       }
-      }
-      else if (bid) {
+        const starter = await getStarter(profile, room);
+        if (starter) {
+          await addSpendBid(
+            profile,
+            "Unregistering Room",
+            starter.bidAmount,
+            "refund"
+          );
+        }
+      } else if (bid) {
         await addSpendBid(profile, "Unregistering Room", bid, "refund");
       }
       toast.success("User unregistered successfully!");
