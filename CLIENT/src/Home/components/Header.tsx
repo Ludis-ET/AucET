@@ -6,7 +6,7 @@ import { isLoggedin } from "../../Authentication/isLoggedin";
 import { Bids } from "../../Payment/pages";
 
 export const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { currentUser, profile, setCurrentUser } = useAuth();
 
   const handleToggleMenu = () => {

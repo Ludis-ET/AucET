@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, deleteDoc, collection, query, getDocs, where } from "firebase/firestore";
 import { db } from "../../firebase";
 
 export const roomTransfer = async (
@@ -25,3 +25,16 @@ export const roomTransfer = async (
     console.error("Error transferring room:", error);
   }
 };
+
+export const gettingStarter = async (roomId: string) => {
+  try {
+    const AuctionRoom = collection(db, "Room-Starter");
+    const starterQuery = query(AuctionRoom, where("roomId", "==", roomId));
+
+    const snap = await getDocs(starterQuery);
+    return snap.docs.map((doc) => doc.data());
+  } catch (error) {
+    console.error("Error fetching starter:", error);
+    return null;
+  }
+}

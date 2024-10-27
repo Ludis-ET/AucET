@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { getRoomById, RoomType } from "../../requests";
+import { getRoomById, RoomType, gettingStarter } from "../../requests";
 import { CountDown, Loader, Property } from "../../components";
 import { Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -24,8 +24,27 @@ export const Redirector = () => {
     fetchRoom();
   }, [roomId]);
 
-  if (loading || !room) return <Loader text="Fetching room details..." />;
   const check = (val: string | Timestamp) => typeof val === "string";
+
+  const starter = gettingStarter(roomId as string);
+  const [maxStarter, setMaxStarter] = useState(0);
+  useEffect(() => {
+    if (
+      room &&
+      check(room.newFormValues.starter) &&
+      room.newFormValues.starter === "people"
+    ) {
+      starter.then((data) => {
+        if (data) {
+          data.map((person) => {
+            setMaxStarter((prevMax) => Math.max(prevMax, person.bidAmount));
+          });
+        }
+      });
+    }
+  }, [room, starter]);
+
+  if (loading || !room) return <Loader text="Fetching room details..." />;
 
   return (
     <div className="bg-mainBackground min-h-screen p-8 flex justify-center">
@@ -61,6 +80,18 @@ export const Redirector = () => {
             content={
               check(room.newFormValues.duration)
                 ? `${room.newFormValues.duration} Hours`
+                : ""
+            }
+          />
+          <Property
+            title="Starting Bid"
+            content={
+              check(room.newFormValues.starter)
+                ? room.newFormValues.starter === "people"
+                  ? maxStarter.toString()
+                  : room.newFormValues.starter === "set"
+                  ? (room.newFormValues.bid as string)
+                  : "0"
                 : ""
             }
           />

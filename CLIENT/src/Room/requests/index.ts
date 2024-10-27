@@ -10,4 +10,4 @@ export {
 
 export { registerUser, fetchRegisteredUsers, unregisterUser } from "./Register";
 export type { UserRegistration } from "./Register";
-export { roomTransfer } from "./RoomTransfer";
+export { roomTransfer, gettingStarter } from "./RoomTransfer";
