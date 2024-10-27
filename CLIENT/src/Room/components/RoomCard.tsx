@@ -40,7 +40,7 @@ export const RoomCard = ({ room }: { room: RoomType }) => {
       <div className="p-6">
         <Link
           to={`/rooms/view/${room.id}`}
-          className="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-brown-gray-900 antialiased"
+          className="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-brown-gray-900 hover:text-buttonBackground antialiased"
         >
           {typeof room.newFormValues.name === "string"
             ? room.newFormValues.name
@@ -54,11 +54,21 @@ export const RoomCard = ({ room }: { room: RoomType }) => {
         {typeof room.newFormValues.roomtype === "string" &&
         room.newFormValues.roomtype === "large" ? (
           <span className="bg-yellow-100 m-4 text-yellow-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
-            Premium
+            Premium Room
           </span>
         ) : (
-          <span className="bg-yellow-100 m-4 text-yellow-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
-            free
+          <span className="bg-gray-100 text-gray-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
+            Basic Room
+          </span>
+        )}
+        {typeof room.newFormValues.BuySell === "string" &&
+        room.newFormValues.BuySell === "buy" ? (
+          <span className="bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+            For Buyers
+          </span>
+        ) : (
+          <span className="bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+            For Sellers
           </span>
         )}
       </div>
