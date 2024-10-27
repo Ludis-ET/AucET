@@ -121,7 +121,7 @@ export const Header = () => {
               </Link>
             </>
           ) : (
-            <div className="flex items-center space-x-4 relative">
+            <div className="flex items-center space-x-4 md:relative">
               <button className="font-semibold text-[15px] border-none outline-none flex gap-1 items-center">
                 <img
                   src={
