@@ -11,10 +11,10 @@ export const Property = ({
 
       <div className="absolute left-2 inset-y-4 w-1 bg-gradient-to-b from-buttonHover via-buttonBackground to-mainText rounded-sm transform transition-transform duration-300 ease-linear hover:translate-x-1 z-30"></div>
 
-      <div className="text-mainText px-5 pt-4 pb-2 font-medium text-lg transition-transform duration-300 ease-linear hover:translate-x-1 z-40">
+      <div className="text-mainText cursor-pointer px-5 pt-4 pb-2 font-medium text-lg transition-transform duration-300 ease-linear hover:translate-x-1 z-40">
         {title}
       </div>
-      <div className="text-otherText px-5 transition-transform duration-300 ease-linear hover:translate-x-1.5 z-40">
+      <div className="text-otherText cursor-pointer px-5 transition-transform duration-300 ease-linear hover:translate-x-1.5 z-40">
         {content}
       </div>
 
