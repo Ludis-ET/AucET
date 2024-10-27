@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { updatePaymentStatus } from "../chapa";
 
 export const Callback = () => {
@@ -20,12 +20,12 @@ export const Callback = () => {
         <p className="text-lg text-otherText mb-4">
           Your payment status has been successfully updated.
         </p>
-        <a
-          href="/"
+        <Link
+          to="/payments"
           className="mt-4 bg-buttonBackground text-white font-bold py-2 px-4 rounded-full hover:bg-buttonHover transition duration-300"
         >
           Go to Home
-        </a>
+        </Link>
       </div>
     </div>
   );

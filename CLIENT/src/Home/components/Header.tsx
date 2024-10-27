@@ -86,7 +86,7 @@ export const Header = () => {
                   </li>
                   <li className="max-lg:border-b max-lg:py-3 px-3">
                     <NavLink
-                      to="/rooms/my"
+                      to="/my"
                       className={({ isActive }) =>
                         isActive
                           ? "text-buttonBackground block font-semibold text-[15px]"

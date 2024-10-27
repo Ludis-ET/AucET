@@ -3,14 +3,15 @@ import { RoomType } from "../requests";
 import Countdown from "react-countdown";
 import { useFetchRegisters } from "../hook/useFetchRegisters";
 import { useAuth } from "../../Context";
-import { FaUser } from "react-icons/fa6";
+import { FaPen, FaUser } from "react-icons/fa6";
+import { isLoggedin } from "../../Authentication/isLoggedin";
 
 export const RoomCard = ({ room }: { room: RoomType }) => {
   const targetDate =
     typeof room.newFormValues.startdate !== "string"
       ? room.newFormValues.startdate.toDate().getTime()
       : new Date(room.newFormValues.startdate).getTime();
-  const { profile } = useAuth();
+  const { currentUser, profile } = useAuth();
   const { registeredUsers } = useFetchRegisters(room.id, profile);
 
   const renderRegisteredUsers = () => (
@@ -46,6 +47,12 @@ export const RoomCard = ({ room }: { room: RoomType }) => {
             ? room.newFormValues.name
             : ""}
         </Link>
+        {isLoggedin(currentUser, profile) &&
+          room.creator === profile.userId && (
+            <Link className="w-full flex justify-end items-center relative">
+              <FaPen className="m-2 text-buttonBackground absolute" />
+            </Link>
+          )}
         <p className="block font-sans text-base font-light leading-relaxed text-inherit antialiased">
           {typeof room.newFormValues.description === "string" &&
             room.newFormValues.description.slice(0, 100)}

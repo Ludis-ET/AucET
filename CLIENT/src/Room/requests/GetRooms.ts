@@ -14,6 +14,7 @@ export interface RoomType {
   id: string;
   coverPhoto: string;
   video: string;
+  creator:string;
   createdAt: Timestamp;
   images: string[];
   newFormValues: Record<string, string | Timestamp>;
