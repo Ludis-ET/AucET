@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useAuth } from "../../Context";
 import { signOut } from "../../Authentication/firebase/GoogleAuth";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { isLoggedin } from "../../Authentication/isLoggedin";
+import { Bids } from "../../Payment/pages";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
@@ -15,12 +16,12 @@ export const Header = () => {
   return (
     <header className="flex shadow-lg py-4 px-4 sm:px-10 bg-white font-sans min-h-[70px] tracking-wide relative z-50">
       <div className="flex flex-wrap items-center justify-between gap-4 w-full">
-        <a
-          href="#"
+        <Link
+          to="/"
           className="lg:absolute max-lg:left-10 lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 text-4xl font-bold text-buttonBackground hover:text-buttonHover transition duration-300 ease-in-out"
         >
           AucET
-        </a>
+        </Link>
 
         {isMenuOpen && (
           <div
@@ -48,47 +49,55 @@ export const Header = () => {
               </svg>
             </button>
 
-            <ul className="lg:flex lg:gap-x-5 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50">
+            <ul className="lg:flex lg:gap-x-5 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-[9999]">
               <li className="mb-6 hidden max-lg:block">
-                <a
-                  href="#"
+                <NavLink
+                  to="/"
                   className="text-4xl font-bold text-buttonBackground hover:text-buttonHover transition duration-300 ease-in-out"
                 >
                   AucET
-                </a>
+                </NavLink>
               </li>
               <li className="max-lg:border-b max-lg:py-3 px-3">
-                <Link
+                <NavLink
                   to="/"
-                  className="hover:text-buttonBackground text-buttonBackground block font-semibold text-[15px]"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-buttonBackground block font-semibold text-[15px]"
+                      : "hover:text-buttonBackground text-buttonBackground block font-semibold text-[15px]"
+                  }
                 >
                   Home
-                </Link>
+                </NavLink>
               </li>
-              <li className="max-lg:border-b max-lg:py-3 px-3">
-                <Link
-                  to="/payments"
-                  className="hover:text-buttonBackground text-[#333] block font-semibold text-[15px]"
-                >
-                  Payments
-                </Link>
-              </li>
-              <li className="max-lg:border-b max-lg:py-3 px-3">
-                <Link
-                  to="/rooms/my"
-                  className="hover:text-buttonBackground text-[#333] block font-semibold text-[15px]"
-                >
-                  My Rooms
-                </Link>
-              </li>
-              <li className="max-lg:border-b max-lg:py-3 px-3">
-                <a
-                  href="#"
-                  className="hover:text-buttonBackground text-[#333] block font-semibold text-[15px]"
-                >
-                  Blog
-                </a>
-              </li>
+              {isLoggedin(currentUser, profile) && (
+                <>
+                  <li className="max-lg:border-b max-lg:py-3 px-3">
+                    <NavLink
+                      to="/payments"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "text-buttonBackground block font-semibold text-[15px]"
+                          : "hover:text-buttonBackground text-[#333] block font-semibold text-[15px]"
+                      }
+                    >
+                      Payments
+                    </NavLink>
+                  </li>
+                  <li className="max-lg:border-b max-lg:py-3 px-3">
+                    <NavLink
+                      to="/rooms/my"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "text-buttonBackground block font-semibold text-[15px]"
+                          : "hover:text-buttonBackground text-[#333] block font-semibold text-[15px]"
+                      }
+                    >
+                      My Rooms
+                    </NavLink>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         )}
@@ -112,7 +121,7 @@ export const Header = () => {
               </Link>
             </>
           ) : (
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 relative">
               <button className="font-semibold text-[15px] border-none outline-none flex gap-1 items-center">
                 <img
                   src={
@@ -123,13 +132,16 @@ export const Header = () => {
                   alt=""
                   className="w-10 h-10 rounded-full"
                 />
-                <a
-                  href={`/room`}
-                  target="_blank"
-                  className="text-buttonBackground hover:underline"
-                >
-                  {profile.firstName}
-                </a>
+                <span className="mx-2 flex-col gap-1 absolute left-[-100%] hidden md:flex">
+                  <a
+                    href={`/room`}
+                    target="_blank"
+                    className="text-buttonBackground hover:underline"
+                  >
+                    {profile.firstName}
+                  </a>
+                  <Bids />
+                </span>
               </button>
               <button
                 onClick={() => signOut(setCurrentUser)}

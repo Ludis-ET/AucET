@@ -11,6 +11,8 @@ import { addSpendBid } from "../../../Payment/chapa";
 import { ConfirmationModal } from "../../components";
 import { getStarter } from "../../requests/GetRooms";
 import { useFetchRegisters } from "../../hook/useFetchRegisters";
+import { isLoggedin } from "../../../Authentication/isLoggedin";
+import { useNavigate } from "react-router-dom";
 
 export const Register = ({
   roomid,
@@ -23,13 +25,14 @@ export const Register = ({
   type?: string;
   bid?: number;
 }) => {
-  const { profile } = useAuth();
+  const { currentUser, profile } = useAuth();
   const { isRegistered, registeredUsers, setRegisteredUsers, setIsRegistered } =
     useFetchRegisters(roomid, profile);
   const [showModal, setShowModal] = useState(false);
   const [showBidModal, setShowBidModal] = useState(false);
   const [bidAmount, setBidAmount] = useState(0);
   const { net } = usePayment();
+  const navigate = useNavigate();
 
   const handleRegister = () => {
     if (type === "set") {
@@ -152,21 +155,30 @@ export const Register = ({
         renderRegisteredUsers()
       )}
       <div className="flex space-x-2">
-        {isRegistered ? (
+        {!isLoggedin(currentUser, profile) && (
           <button
-            onClick={() => handleUnregister(profile.userId)}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            Unregister
-          </button>
-        ) : (
-          <button
-            onClick={handleRegister}
+            onClick={() => navigate("/auth")}
             className="bg-buttonBackground text-white px-4 py-2 rounded hover:bg-buttonHover"
           >
             Register
           </button>
         )}
+        {isLoggedin(currentUser, profile) &&
+          (isRegistered ? (
+            <button
+              onClick={() => handleUnregister(profile.userId)}
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            >
+              Unregister
+            </button>
+          ) : (
+            <button
+              onClick={handleRegister}
+              className="bg-buttonBackground text-white px-4 py-2 rounded hover:bg-buttonHover"
+            >
+              Register
+            </button>
+          ))}
       </div>
 
       {showModal && (

@@ -10,6 +10,7 @@ import {
   deleteComment,
   likeComment,
 } from "../requests";
+import { isLoggedin } from "../../Authentication/isLoggedin";
 
 type Comment = {
   id: string;
@@ -22,7 +23,7 @@ type Comment = {
 };
 
 export const CommentSection = ({ roomid }: { roomid: string }) => {
-  const { profile } = useAuth();
+  const { currentUser, profile } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(false);
@@ -39,7 +40,7 @@ export const CommentSection = ({ roomid }: { roomid: string }) => {
   }, [roomid]);
 
   const handleLike = async (commentId: string) => {
-    if (!profile?.userId) {
+    if (!isLoggedin(currentUser, profile)) {
       toast.error("You must be logged in to like a comment.");
       return;
     }
@@ -53,6 +54,10 @@ export const CommentSection = ({ roomid }: { roomid: string }) => {
   };
 
   const handleAddComment = async () => {
+    if (!isLoggedin(currentUser, profile)) {
+      toast.error("You must be logged in to like a comment.");
+      return;
+    }
     if (newComment.trim()) {
       const commentData: Omit<Comment, "id"> = {
         user: `${profile.firstName} ${profile.lastName}`,
