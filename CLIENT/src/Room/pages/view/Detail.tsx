@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Timestamp } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { CommentSection, CountDown, Loader, Property } from "../../components";
@@ -32,8 +32,7 @@ export const Detail = () => {
     fetchRoom();
   }, [id]);
 
-  if (loading || !room)
-    return <Loader text="Fetching room details..." />;
+  if (loading || !room) return <Loader text="Fetching room details..." />;
   const openModal = (index: number) => {
     setCurrentIndex(index);
     setIsModalOpen(true);
@@ -54,7 +53,6 @@ export const Detail = () => {
       setCurrentIndex(currentIndex - 1);
     }
   };
-
 
   const check = (val: string | Timestamp) => typeof val === "string";
   return (
@@ -105,6 +103,14 @@ export const Detail = () => {
           room={room}
           bid={Number(room.newFormValues.bid)}
         />
+        <p>
+          <Link
+            className="bg-buttonBackground text-white p-2 rounded-lg hover:bg-buttonHover"
+            to={`/auction/${room.id}`}
+          >
+            Go to Auction Room
+          </Link>
+        </p>
         <p className="whitespace-pre-line p-4">
           {check(room.newFormValues.description) &&
             room.newFormValues.description}

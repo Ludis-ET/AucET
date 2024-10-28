@@ -7,7 +7,7 @@ import { useFetchRegisters } from "../../hook/useFetchRegisters";
 import { useAuth } from "../../../Context";
 import { isLoggedin } from "../../../Authentication/isLoggedin";
 import { FaLink } from "react-icons/fa6";
-import { Auction } from "./Auction";
+import { Chat } from "./Chat";
 
 export const Redirector = () => {
   const { roomId } = useParams();
@@ -77,8 +77,18 @@ export const Redirector = () => {
   if (loading || !room) return <Loader text="Fetching room details..." />;
 
   if (auctionStatus === "Ongoing") {
-    
-    return <Auction room={room} starter={maxStarter} />;
+    if (!isLoggedin(currentUser, profile)) {
+      return (
+        <div className="bg-mainBackground min-h-screen p-8 flex justify-center text-4xl items-center font-bold text-buttonBackground">
+          Log in to participate in the auction
+        </div>
+      );
+    }
+    return (
+      <div className="flex w-full justify-center items-center">
+        <Chat room={room} starter={maxStarter} />;
+      </div>
+    );
   } else if (auctionStatus === "Ended") {
     return <div>Auction Ended</div>;
   }
