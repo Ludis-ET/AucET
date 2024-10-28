@@ -3,11 +3,16 @@ import { getRoomById, RoomType, gettingStarter } from "../../requests";
 import { CountDown, Loader, Property } from "../../components";
 import { Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { useFetchRegisters } from "../../hook/useFetchRegisters";
+import { useAuth } from "../../../Context";
+import { isLoggedin } from "../../../Authentication/isLoggedin";
 
 export const Redirector = () => {
   const { roomId } = useParams();
   const [room, setRoom] = useState<RoomType | null>(null);
   const [loading, setLoading] = useState(true);
+  const { currentUser, profile } = useAuth();
+  const { isRegistered } = useFetchRegisters(roomId as string, profile);
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -91,12 +96,19 @@ export const Redirector = () => {
                   ? maxStarter.toString()
                   : room.newFormValues.starter === "set"
                   ? (room.newFormValues.bid as string)
-                  : "0"
+                  : "0 Bid"
                 : ""
             }
           />
         </main>
-        <footer></footer>
+        <footer className="flex flex-col items-center">
+          {isLoggedin(currentUser, profile) &&
+            (isRegistered ? (
+              <span className="text-green-700">You are registered</span>
+            ) : (
+              <span className="text-red-700">You are not registered</span>
+            ))}
+        </footer>
       </div>
     </div>
   );
