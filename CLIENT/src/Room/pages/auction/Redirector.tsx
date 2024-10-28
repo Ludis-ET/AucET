@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getRoomById, RoomType, gettingStarter } from "../../requests";
 import { CountDown, Loader, Property } from "../../components";
 import { Timestamp } from "firebase/firestore";
@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useFetchRegisters } from "../../hook/useFetchRegisters";
 import { useAuth } from "../../../Context";
 import { isLoggedin } from "../../../Authentication/isLoggedin";
+import { FaLink } from "react-icons/fa6";
+import { Auction } from "./Auction";
 
 export const Redirector = () => {
   const { roomId } = useParams();
@@ -13,6 +15,8 @@ export const Redirector = () => {
   const [loading, setLoading] = useState(true);
   const { currentUser, profile } = useAuth();
   const { isRegistered } = useFetchRegisters(roomId as string, profile);
+
+  const [auctionStatus, setAuctionStatus] = useState<string>("");
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -28,6 +32,27 @@ export const Redirector = () => {
 
     fetchRoom();
   }, [roomId]);
+
+  useEffect(() => {
+    if (room) {
+      const startDate = new Date(
+        check(room.newFormValues.startdate)
+          ? room.newFormValues.startdate
+          : (room.newFormValues.startdate as Timestamp).toDate()
+      );
+      const duration = parseFloat(room.newFormValues.duration as string);
+      const endDate = new Date(startDate.getTime() + duration * 60 * 60 * 1000);
+      const currentTime = new Date();
+
+      if (currentTime < startDate) {
+        setAuctionStatus("About to Start");
+      } else if (currentTime >= startDate && currentTime <= endDate) {
+        setAuctionStatus("Ongoing");
+      } else {
+        setAuctionStatus("Ended");
+      }
+    }
+  }, [room]);
 
   const check = (val: string | Timestamp) => typeof val === "string";
 
@@ -51,9 +76,16 @@ export const Redirector = () => {
 
   if (loading || !room) return <Loader text="Fetching room details..." />;
 
+  if (auctionStatus === "Ongoing") {
+    
+    return <Auction room={room} starter={maxStarter} />;
+  } else if (auctionStatus === "Ended") {
+    return <div>Auction Ended</div>;
+  }
+
   return (
     <div className="bg-mainBackground min-h-screen p-8 flex justify-center">
-      <div className="bg-secondaryBackground p-2 min-w-[40vw] max-h-[80vh] rounded-xl shadow-2xl">
+      <div className="bg-secondaryBackground p-2 min-w-[40vw] max-h-[80vh] rounded-xl shadow-2xl overflow-y-scroll py-4">
         <header>
           <CountDown
             time={
@@ -64,6 +96,7 @@ export const Redirector = () => {
           />
         </header>
         <main className="m-9">
+          <Property title="Auction Status" content={auctionStatus} />
           <Property
             title="Item Name"
             content={
@@ -108,6 +141,12 @@ export const Redirector = () => {
             ) : (
               <span className="text-red-700">You are not registered</span>
             ))}
+          <Link
+            to={`/view/${roomId}`}
+            className="flex  items-center gap-2 hover:text-buttonBackground text-xl cursor-pointer"
+          >
+            <FaLink /> See the item
+          </Link>
         </footer>
       </div>
     </div>
