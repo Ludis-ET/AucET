@@ -1,3 +1,4 @@
+// Chat.tsx
 import { useCallback, useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa6";
 import { RoomType } from "../../requests";
@@ -5,7 +6,7 @@ import { realtimeDb, db } from "../../../firebase";
 import { ref, onValue, remove, set } from "firebase/database";
 import { useAuth, usePayment } from "../../../Context";
 import { useNavigate } from "react-router-dom";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 
 export const Chat = ({
@@ -113,10 +114,8 @@ export const Chat = ({
       timestamp: new Date().toISOString(),
     });
 
-    const roomRef = ref(realtimeDb, `rooms/${room.id}`);
-    await remove(roomRef);
-
-    navigate("/auction-summary");
+    await remove(ref(realtimeDb, `rooms/${room.id}`));
+   navigate(`/analytics/${room.id}`);
   }, [messages, maxBid, navigate, room.id, uniqueBidders]);
 
   useEffect(() => {
@@ -196,7 +195,7 @@ export const Chat = ({
           type="number"
           className="w-full p-2 rounded-lg border border-buttonBackground outline-none"
           placeholder="Enter your bid..."
-          value={newMessage || maxBid + 0.01}
+          value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           min={maxBid + 0.01}
           step={0.01}
