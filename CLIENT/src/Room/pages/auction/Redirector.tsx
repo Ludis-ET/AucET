@@ -90,7 +90,11 @@ export const Redirector = () => {
       </div>
     );
   } else if (auctionStatus === "Ended") {
-    return <div>Auction Ended</div>;
+    return (
+      <div className="bg-mainBackground min-h-screen p-8 flex justify-center text-4xl items-center font-bold text-buttonBackground">
+        Auction Ended
+      </div>
+    );
   }
 
   return (
