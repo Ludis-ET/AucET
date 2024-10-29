@@ -46,7 +46,7 @@ export const Withdrawal = () => {
     }
 
     setLoading(true);
-    await addWithdrawnBid(profile, amountAfterFee, bidAfterFee, phoneNumber);
+    await addWithdrawnBid(profile, amountAfterFee, phoneNumber);
     setLoading(false);
   };
 
