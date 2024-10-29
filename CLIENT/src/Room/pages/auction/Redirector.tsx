@@ -85,7 +85,7 @@ export const Redirector = () => {
       );
     }
     return (
-      <div className="flex w-full justify-center items-center">
+      <div className="flex w-full justify-center items-center p-12">
         <Chat room={room} starter={maxStarter} />;
       </div>
     );

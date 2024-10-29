@@ -5,7 +5,7 @@ import { realtimeDb, db } from "../../../firebase";
 import { ref, onValue, remove, set } from "firebase/database";
 import { useAuth, usePayment } from "../../../Context";
 import { useNavigate } from "react-router-dom";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
 import toast from "react-hot-toast";
 
 export const Chat = ({
@@ -30,11 +30,29 @@ export const Chat = ({
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
   const [maxBid, setMaxBid] = useState<number>(starter);
-  const [timer, setTimer] = useState<number>(
-    Number(room.newFormValues.duration) * 3600
-  );
+  const [timer, setTimer] = useState<number>(() => {
+    const startTimestamp =
+      typeof room.newFormValues.startdate === "object" &&
+      "toDate" in room.newFormValues.startdate
+        ? room.newFormValues.startdate.toDate().getTime()
+        : new Date(room.newFormValues.startdate).getTime();
+
+    const durationSeconds = Number(room.newFormValues.duration) * 3600;
+    const endTime = startTimestamp + durationSeconds * 1000;
+    const currentTime = Date.now();
+
+    return Math.max(0, Math.floor((endTime - currentTime) / 1000));
+  });
+
   const [winner, setWinner] = useState<string | null>(null);
   const [uniqueBidders, setUniqueBidders] = useState<Set<string>>(new Set());
+
+  const formatTime = (seconds: number) => {
+    const h = String(Math.floor(seconds / 3600)).padStart(2, "0");
+    const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
+    const s = String(seconds % 60).padStart(2, "0");
+    return `${h}:${m}:${s}`;
+  };
 
   useEffect(() => {
     const messagesRef = ref(realtimeDb, `rooms/${room.id}/messages`);
@@ -153,7 +171,7 @@ export const Chat = ({
             {maxBid} <p>BID</p>
           </span>
         </span>
-        <div className="text-red-500">Time Left: {timer} seconds</div>
+        <div className="text-red-500">Time Left: {formatTime(timer)}</div>
         {winner && <div className="text-green-500">Winner: {winner}</div>}
       </header>
       <main className="w-[500px] p-4 max-w-[90vw] h-[500px] max-h-[80vh] bg-mainBackground overflow-x-hidden overflow-y-scroll">
