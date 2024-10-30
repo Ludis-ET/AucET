@@ -60,14 +60,14 @@ export const AllRooms = () => {
   }, [searchTerm, dateFilter, newFormValuesFilter, rooms]);
 
   return (
-    <div className="bg-mainBackground min-h-screen p-8 ">
+    <div className="bg-mainBackground min-h-screen p-2 md:p-8 ">
       <h1 className="text-3xl text-buttonBackground font-bold px-12">
         Register for the Rooms today and enjoy special benefits!
       </h1>
 
       <div className="grid grid-cols-4 gap-4 relative">
         <div className="col-span-3">
-          <div className="w-full flex flex-wrap gap-12 py-12">
+          <div className="w-full flex flex-wrap md:gap-12 py-12 justify-center items-center pl-12">
             {loading ? (
               <>
                 {[...Array(12)].map((_, k) => (

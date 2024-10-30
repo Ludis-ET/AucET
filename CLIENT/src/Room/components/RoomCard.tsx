@@ -32,7 +32,7 @@ export const RoomCard = ({ room }: { room: RoomType }) => {
   );
 
   return (
-    <div className="relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
+    <div className="relative flex w-[80vw] md:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
       <img
         src={room.coverPhoto}
         alt=""
