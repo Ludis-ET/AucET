@@ -20,7 +20,7 @@ export const Header = () => {
           to="/"
           className="lg:absolute max-lg:left-10 lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 text-4xl font-bold text-buttonBackground hover:text-buttonHover transition duration-300 ease-in-out"
         >
-          AucET
+          WinBID
         </Link>
 
         {isMenuOpen && (
@@ -55,7 +55,7 @@ export const Header = () => {
                   to="/"
                   className="text-4xl font-bold text-buttonBackground hover:text-buttonHover transition duration-300 ease-in-out"
                 >
-                  AucET
+                  WinBID
                 </NavLink>
               </li>
               <li className="max-lg:border-b max-lg:py-3 px-3">

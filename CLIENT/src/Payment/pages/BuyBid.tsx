@@ -6,7 +6,7 @@ import { Bids } from ".";
 const generateTxRef = () => {
   const randomHash = Math.random().toString(36).substring(2, 15);
   const timestamp = Date.now();
-  return `aucet-tx-${randomHash}-${timestamp}`;
+  return `WinBID-tx-${randomHash}-${timestamp}`;
 };
 
 export const BuyBid = () => {

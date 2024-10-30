@@ -7,7 +7,7 @@ export const Footer = () => {
             href="#"
             className="text-4xl font-bold text-buttonBackground hover:text-buttonHover transition duration-300 ease-in-out"
           >
-            AucET
+            WinBID
           </a>
         </div>
 

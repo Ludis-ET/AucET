@@ -31,7 +31,7 @@ export const Login = () => {
       </div>
       <div className="lg:p-36 md:p-52 sm:p-20 p-8 w-full flex flex-col gap-8 lg:w-1/2">
         <h1 className="text-4xl text-center font-semibold mb-4 text-mainText">
-          Welcome to AucEt, your premier online auction platform where exciting
+          Welcome to WinBID, your premier online auction platform where exciting
           bidding experiences await!
         </h1>
         <button
